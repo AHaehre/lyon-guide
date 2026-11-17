@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lyon-guide</title>
+<meta name="description" content="Interaktivt turistkart og lokalguide for Lyon: arrondissement, landemerker og programmet for helgen.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lyon">
+<meta name="theme-color" content="#182840">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/* Layout: kartet fyller skjermen; toppfelt med arrondissement, bunnark med innhold, tabbar nederst. */
+:root {
+  --bg: #f3f4f1;
+  --panel: #ffffff;
+  --fg: #182840;
+  --muted: #5d6675;
+  --line: #d9dde3;
+  --rhone: #2b5f8f;       /* elveblått, primæraksent */
+  --gold: #c69a2c;        /* Fourvière-gull, sekundær */
+  --here: #c1442e;        /* "du er her" */
+  --soft: #e8edf3;
+  --shadow: 0 8px 28px rgba(24,40,64,.18);
+  --display: "DM Serif Display", Georgia, serif;
+  --body: "Inter", -apple-system, "Segoe UI", sans-serif;
+  --ink: #182840;         /* fast mørk flate til bannere og nåler, begge temaer */
+  --tabbar: 58px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1724; --panel: #182333; --fg: #eef1f5; --muted: #a3adbb; --line: #2a3648;
+  --rhone: #6ea3d6; --gold: #e0b852; --here: #ef6a50; --soft: #22304a; --shadow: 0 8px 28px rgba(0,0,0,.5); color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #0f1724; --panel: #182333; --fg: #eef1f5; --muted: #a3adbb; --line: #2a3648;
+  --rhone: #6ea3d6; --gold: #e0b852; --here: #ef6a50; --soft: #22304a; --shadow: 0 8px 28px rgba(0,0,0,.5); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--body); overflow: hidden; -webkit-text-size-adjust: 100%; }
+button { font: inherit; color: inherit; }
+h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
+
+#app { position: fixed; inset: 0; display: flex; flex-direction: column; }
+#map { position: absolute; inset: 0; z-index: 0; background: var(--soft); }
+
+/* Toppfelt */
+#top { position: relative; z-index: 5; margin: calc(env(safe-area-inset-top, 0px) + 10px) auto 0; width: min(100% - 24px, 520px);
+  background: var(--panel); border-radius: 18px; box-shadow: var(--shadow); padding: 10px 14px 10px 12px; display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+#arrNum { font: 44px/1 var(--display); color: var(--rhone); min-width: 58px; text-align: center; font-variant-numeric: tabular-nums; }
+#arrNum small { font-size: 20px; }
+#arrNum.outside { font-size: 26px; }
+#topText { min-width: 0; }
+#topQuarter { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#topStreet { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#gpsBtn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); display: grid; place-items: center; cursor: pointer; }
+#gpsBtn svg { width: 22px; height: 22px; fill: none; stroke: var(--muted); stroke-width: 2; }
+#gpsBtn.on svg { stroke: var(--rhone); }
+#gpsBtn.manual svg { stroke: var(--gold); }
+#gpsBtn:focus-visible, .tab:focus-visible, button:focus-visible { outline: 2px solid var(--rhone); outline-offset: 2px; }
+
+/* Bunnark */
+#sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 6; background: var(--panel); border-radius: 20px 20px 0 0; box-shadow: var(--shadow);
+  display: flex; flex-direction: column; height: 46%; max-height: calc(100% - 120px); transition: height .25s ease; }
+#sheet.peek { height: calc(var(--tabbar) + env(safe-area-inset-bottom, 0px) + 92px); }
+#sheet.full { height: calc(100% - 96px - env(safe-area-inset-top, 0px)); }
+@media (prefers-reduced-motion: reduce) { #sheet { transition: none; } }
+#grip { flex: 0 0 auto; padding: 8px 0 2px; display: grid; place-items: center; cursor: grab; touch-action: none; }
+#grip::before { content: ""; width: 42px; height: 5px; border-radius: 3px; background: var(--line); }
+#content { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px)); }
+#tabs { flex: 0 0 auto; display: flex; border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); height: calc(var(--tabbar) + env(safe-area-inset-bottom, 0px)); }
+.tab { flex: 1; border: 0; background: none; color: var(--muted); font-size: 11px; font-weight: 500; letter-spacing: .02em; display: grid; justify-items: center; align-content: center; gap: 3px; cursor: pointer; }
+.tab svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tab[aria-selected="true"] { color: var(--rhone); }
+
+/* Innholdskomponenter */
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
+.card { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: var(--panel); display: grid; gap: 4px; }
+.card + .card { margin-top: 8px; }
+.card.hit { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 8%, var(--panel)); }
+.card.btn { cursor: pointer; }
+.card h3 { font: 20px/1.15 var(--display); }
+.card .sub { color: var(--muted); font-size: 13px; }
+.card .dist { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.row { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; min-width: 0; }
+.row > * { min-width: 0; }
+.pill { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+.pill.cat-mat { background: color-mix(in srgb, var(--here) 15%, var(--panel)); color: var(--here); }
+.pill.cat-personlig { background: color-mix(in srgb, var(--gold) 20%, var(--panel)); color: var(--gold); }
+.list { display: grid; gap: 8px; }
+.item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+.item:last-child { border-bottom: 0; }
+.item .n { font-weight: 500; }
+.item .s { color: var(--muted); font-size: 13px; }
+.item .d { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.act { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.act.primary { background: var(--rhone); border-color: var(--rhone); color: #fff; }
+.note { color: var(--muted); font-size: 13px; }
+.muted { color: var(--muted); }
+input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; font: inherit; background: var(--panel); color: var(--fg); }
+
+/* Detalj */
+.detail h2 { font: 28px/1.1 var(--display); margin: 4px 0 2px; }
+.detail .lead { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+.detail p { margin: 0 0 10px; max-width: 65ch; }
+.detail .facts { margin: 8px 0; padding: 0 0 0 18px; }
+.detail .facts li { margin-bottom: 6px; }
+.detail .lookfor { border-left: 3px solid var(--gold); padding: 6px 12px; margin: 10px 0; background: var(--soft); border-radius: 0 10px 10px 0; }
+.back { border: 0; background: none; color: var(--rhone); font-weight: 500; padding: 4px 0; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+
+/* Program */
+.days { display: flex; gap: 6px; margin: 6px 0 10px; }
+.day { flex: 1; border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 8px 4px; cursor: pointer; display: grid; justify-items: center; }
+.day b { font-weight: 600; }
+.day small { color: var(--muted); font-size: 11px; }
+.day[aria-selected="true"] { border-color: var(--rhone); background: color-mix(in srgb, var(--rhone) 10%, var(--panel)); }
+.tl { display: grid; grid-template-columns: 64px 1fr; }
+.tl .t { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 12px; text-align: right; padding-right: 12px; }
+.tl .stop { position: relative; padding: 10px 0 10px 18px; border-left: 2px solid var(--line); cursor: pointer; }
+.tl .stop::before { content: ""; position: absolute; left: -7px; top: 16px; width: 12px; height: 12px; border-radius: 50%; background: var(--rhone); border: 2px solid var(--panel); }
+.tl .stop.now::before { background: var(--here); box-shadow: 0 0 0 4px color-mix(in srgb, var(--here) 25%, transparent); }
+.tl .stop .n { font-weight: 600; }
+.tl .stop .note { margin-top: 2px; }
+.tl .leg { padding: 2px 0 2px 18px; border-left: 2px dashed var(--line); color: var(--muted); font-size: 13px; display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.tl .leg svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; flex: 0 0 auto; }
+.tl .leg b { color: var(--fg); font-weight: 500; font-variant-numeric: tabular-nums; }
+.tl .leg .lbl { opacity: .85; }
+
+/* Kart-markører */
+.poi-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.4); background: var(--rhone); }
+.poi-dot.cat-mat { background: var(--here); }
+.poi-dot.cat-personlig, .poi-dot.cat-utsikt { background: var(--gold); }
+.poi-dot.cat-kirke, .poi-dot.cat-romersk { background: #6a4c93; }
+.poi-dot.cat-traboule, .poi-dot.cat-gate { background: #3a8f6e; }
+.poi-dot.cat-plass, .poi-dot.cat-fontene { background: #d98c2b; }
+.stop-pin { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--ink); border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.4); display: grid; place-items: center; }
+.stop-pin span { transform: rotate(45deg); color: #fff; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.me { width: 18px; height: 18px; border-radius: 50%; background: var(--here); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--here), 0 2px 8px rgba(0,0,0,.4); }
+.me.manual { background: var(--gold); box-shadow: 0 0 0 2px var(--gold), 0 2px 8px rgba(0,0,0,.4); }
+.arr-label { font: 600 12px var(--body); color: var(--rhone); background: rgba(255,255,255,.75); padding: 1px 6px; border-radius: 6px; white-space: nowrap; pointer-events: none; }
+.leaflet-container { font-family: var(--body); }
+.leaflet-control-attribution { font-size: 10px; }
+.leaflet-top.leaflet-right { top: calc(env(safe-area-inset-top, 0px) + 92px); }
+.leaflet-bar a { color: #222; }
+
+#banner { position: absolute; z-index: 7; left: 50%; transform: translateX(-50%); bottom: calc(46% + 10px); background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 999px; font-size: 13px; box-shadow: var(--shadow); display: flex; gap: 12px; align-items: center; max-width: calc(100% - 32px); }
+#banner button { border: 0; background: rgba(255,255,255,.18); color: #fff; border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+#banner[hidden] { display: none; }
+#toast { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); top: calc(env(safe-area-inset-top, 0px) + 84px); background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
+#toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="map" role="application" aria-label="Kart over Lyon"></div>
+
+  <header id="top">
+    <div id="arrNum" aria-live="polite">–</div>
+    <div id="topText">
+      <div id="topQuarter">Finner posisjon …</div>
+      <div id="topStreet">Trykk på GPS-knappen for å starte</div>
+    </div>
+    <button id="gpsBtn" aria-label="Posisjon" title="Følg min posisjon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></svg>
+    </button>
+  </header>
+
+  <div id="banner" hidden><span id="bannerText">Manuell posisjon</span><button id="bannerBtn">Tilbake til GPS</button></div>
+  <div id="toast" role="status"></div>
+
+  <section id="sheet" aria-label="Innhold">
+    <div id="grip" aria-hidden="true"></div>
+    <div id="content"></div>
+    <nav id="tabs" role="tablist">
+      <button class="tab" role="tab" data-view="here" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Her</button>
+      <button class="tab" role="tab" data-view="program" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Program</button>
+      <button class="tab" role="tab" data-view="places" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Steder</button>
+      <button class="tab" role="tab" data-view="arr" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3z"/><path d="M9 4v13M15 7v13"/></svg>Bydeler</button>
+    </nav>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="data/arrondissements.js?v=20261116b"></script>
+<script src="data/routes.js?v=20261116b"></script>
+<script src="data/streets.js?v=20261116b"></script>
+<script src="data/plan.js?v=20261116b"></script>
+<script src="data/pois-a.js?v=20261116b"></script>
+<script src="data/pois-b.js?v=20261116b"></script>
+<script src="data/pois-c.js?v=20261116b"></script>
+<script>
+(function () {
+  'use strict';
+  const POIS = (() => { const seen = new Set(); return (window.LYON_POIS || []).filter(p => !seen.has(p.id) && seen.add(p.id)); })();
+  const ARR = window.LYON_ARR;
+  const ROUTES = window.LYON_ROUTES || {};
+  const PLACES = window.LYON_PLACES || {};
+  const PLAN = window.LYON_PLAN || [];
+  const ARRINFO = window.LYON_ARR_INFO || {};
+  const NAMES = window.LYON_PLACE_NAMES || {};
+  const $ = s => document.querySelector(s);
+
+  // ---------- Geometri ----------
+  function haversine(a, b) {
+    const R = 6371000, toR = Math.PI / 180;
+    const dLat = (b.lat - a.lat) * toR, dLng = (b.lng - a.lng) * toR;
+    const s = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * toR) * Math.cos(b.lat * toR) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+  function inRing(pt, ring) { // ring: [[lng,lat],...]
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+      const hit = ((yi > pt.lat) !== (yj > pt.lat)) && (pt.lng < (xj - xi) * (pt.lat - yi) / (yj - yi) + xi);
+      if (hit) inside = !inside;
+    }
+    return inside;
+  }
+  function inPolygon(pt, poly) { // poly: [outer, hole, hole...]
+    if (!inRing(pt, poly[0])) return false;
+    for (let k = 1; k < poly.length; k++) if (inRing(pt, poly[k])) return false;
+    return true;
+  }
+  function arrondissementAt(pt) {
+    for (const f of ARR.features) {
+      const g = f.geometry;
+      const polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+      for (const p of polys) if (inPolygon(pt, p)) return f.properties.arr;
+    }
+    return 0;
+  }
+  const fmtDist = m => m < 1000 ? Math.round(m / 5) * 5 + ' m' : (m / 1000).toFixed(m < 10000 ? 1 : 0).replace('.', ',') + ' km';
+  const ordinal = n => n === 1 ? '1<small>er</small>' : n + '<small>e</small>';
+  const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ---------- Tilstand ----------
+  const state = { pos: null, source: 'none', watchId: null, follow: false, view: 'here', day: 0, detail: null, street: '', streetAt: null, wiki: null };
+  try { const d = localStorage.getItem('lyon.day'); if (d) state.day = Math.min(PLAN.length - 1, +d || 0); } catch (e) {}
+
+  // ---------- Kart ----------
+  const map = L.map('map', { zoomControl: false, attributionControl: true }).setView([45.7625, 4.8335], 14);
+  L.control.zoom({ position: 'topright' }).addTo(map);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+
+  const arrLayer = L.geoJSON(ARR, {
+    style: f => ({ color: '#2b5f8f', weight: 1.5, opacity: .7, fillColor: '#2b5f8f', fillOpacity: .05, dashArray: '4 3' }),
+    interactive: false
+  }).addTo(map);
+  // Etiketter i arrondissementenes tyngdepunkt
+  const arrLabels = L.layerGroup().addTo(map);
+  ARR.features.forEach(f => {
+    const c = L.geoJSON(f).getBounds().getCenter();
+    L.marker(c, { icon: L.divIcon({ className: '', html: `<div class="arr-label">${f.properties.arr === 1 ? '1er' : f.properties.arr + 'e'}</div>`, iconSize: null }), interactive: false, keyboard: false }).addTo(arrLabels);
+  });
+  map.on('zoomend', () => { if (map.getZoom() >= 15) map.removeLayer(arrLabels); else if (!map.hasLayer(arrLabels)) map.addLayer(arrLabels); });
+
+  // Steder
+  const poiLayer = L.layerGroup().addTo(map);
+  POIS.forEach(p => {
+    if (p.cat === 'bydel') return;
+    const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<div class="poi-dot cat-${p.cat}"></div>`, iconSize: [12, 12], iconAnchor: [6, 6] }), title: p.name, keyboard: false });
+    m.on('click', () => openDetail(p.id));
+    m.bindTooltip(p.name, { direction: 'top', offset: [0, -6] });
+    m.addTo(poiLayer);
+  });
+
+  // Ruter og stopp
+  const routeLayer = L.layerGroup().addTo(map);
+  const stopLayer = L.layerGroup().addTo(map);
+  let routeLines = {};
+  function drawDay(idx) {
+    routeLayer.clearLayers(); stopLayer.clearLayers(); routeLines = {};
+    const day = PLAN[idx]; if (!day) return;
+    let n = 0;
+    const seen = new Set();
+    day.items.forEach(it => {
+      if (it.leg && ROUTES[it.leg]) {
+        const r = ROUTES[it.leg];
+        const line = L.polyline(r.coords, { color: r.mode === 'foot' ? '#2b5f8f' : '#5d6675', weight: r.mode === 'foot' ? 5 : 4, opacity: .85, dashArray: r.mode === 'foot' ? null : '8 6' });
+        line.bindTooltip(`${r.mode === 'foot' ? 'Til fots' : 'Bil'} · ${r.min} min · ${fmtDist(r.dist)}`, { sticky: true });
+        line.addTo(routeLayer); routeLines[it.leg] = line;
+      }
+      if (it.place && PLACES[it.place] && !seen.has(it.place)) {
+        seen.add(it.place); n++;
+        const [lat, lng] = PLACES[it.place];
+        const m = L.marker([lat, lng], { icon: L.divIcon({ className: '', html: `<div class="stop-pin"><span>${n}</span></div>`, iconSize: [26, 26], iconAnchor: [13, 26] }), title: it.title, zIndexOffset: 500 });
+        m.bindTooltip(`${it.time ? it.time + ' · ' : ''}${it.title}`, { direction: 'top', offset: [0, -24] });
+        m.on('click', () => { const poi = nearestPoiTo({ lat, lng }, 80); if (poi) openDetail(poi.id); else { showView('program'); } });
+        m.addTo(stopLayer);
+      }
+    });
+  }
+  drawDay(state.day);
+
+  // Egen posisjon
+  let meMarker = null, accCircle = null;
+  function renderMe() {
+    if (!state.pos) return;
+    const ll = [state.pos.lat, state.pos.lng];
+    if (!meMarker) {
+      meMarker = L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="me"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }), zIndexOffset: 1000, keyboard: false }).addTo(map);
+      accCircle = L.circle(ll, { radius: state.pos.acc || 0, color: '#c1442e', weight: 1, fillOpacity: .08 }).addTo(map);
+    }
+    meMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(state.source === 'gps' ? (state.pos.acc || 0) : 0);
+    meMarker.getElement().firstChild.className = 'me' + (state.source === 'manual' ? ' manual' : '');
+  }
+
+  // ---------- Posisjon ----------
+  const gpsBtn = $('#gpsBtn');
+  function setPos(lat, lng, acc, source) {
+    const moved = !state.pos || haversine(state.pos, { lat, lng }) > 15;
+    state.pos = { lat, lng, acc: acc || 0 }; state.source = source;
+    renderMe();
+    if (state.follow && source === 'gps') map.panTo([lat, lng], { animate: true });
+    gpsBtn.className = source === 'gps' ? 'on' : (source === 'manual' ? 'manual' : '');
+    $('#banner').hidden = source !== 'manual';
+    if (moved) { updateTop(); if (state.view === 'here' && !state.detail) render(); maybeStreet(); }
+  }
+  function startGps() {
+    if (!navigator.geolocation) { toast('Ingen GPS tilgjengelig i denne nettleseren'); return; }
+    if (state.watchId != null) navigator.geolocation.clearWatch(state.watchId);
+    $('#topQuarter').textContent = 'Finner posisjon …';
+    state.watchId = navigator.geolocation.watchPosition(
+      p => setPos(p.coords.latitude, p.coords.longitude, p.coords.accuracy, 'gps'),
+      err => { toast(err.code === 1 ? 'Posisjon er avslått. Tillat stedstjenester for denne siden i Innstillinger.' : 'Fant ikke posisjon. Trykk på kartet for å sette den manuelt.'); gpsBtn.className = ''; if (!state.pos) { $('#topQuarter').textContent = 'Ingen posisjon'; $('#topStreet').textContent = 'Trykk på kartet for å velge et sted'; } },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
+    state.follow = true;
+  }
+  function stopGps() { if (state.watchId != null) navigator.geolocation.clearWatch(state.watchId); state.watchId = null; state.follow = false; }
+  gpsBtn.addEventListener('click', () => {
+    if (state.source === 'gps' && state.follow) { map.setView([state.pos.lat, state.pos.lng], Math.max(map.getZoom(), 16)); return; }
+    startGps();
+  });
+  $('#bannerBtn').addEventListener('click', () => { startGps(); $('#banner').hidden = true; });
+  map.on('dragstart', () => { state.follow = false; });
+  // Trykk/hold på kartet setter manuell posisjon (fint for planlegging ved bordet)
+  let pressTimer = null;
+  map.on('mousedown touchstart', e => {
+    clearTimeout(pressTimer);
+    const latlng = e.latlng || (e.touches && map.mouseEventToLatLng(e.touches[0]));
+    pressTimer = setTimeout(() => { if (latlng) { stopGps(); setPos(latlng.lat, latlng.lng, 0, 'manual'); toast('Manuell posisjon satt'); } }, 550);
+  });
+  map.on('mouseup touchend dragstart move zoomstart', () => clearTimeout(pressTimer));
+  map.on('click', e => { if (e.originalEvent && e.originalEvent.detail === 2) return; });
+  map.on('dblclick', e => { stopGps(); setPos(e.latlng.lat, e.latlng.lng, 0, 'manual'); toast('Manuell posisjon satt'); });
+  map.doubleClickZoom.disable();
+
+  // Gatenavn: først lokalt fra innebygd gatenett (fungerer uten nett), nettoppslag bare på forespørsel.
+  const STREETS = window.LYON_STREETS || [];
+  function segDist(p, a, b) {
+    const kx = 77600, ky = 111320;
+    const px = p.lng * kx, py = p.lat * ky, ax = a[1] * kx, ay = a[0] * ky, bx = b[1] * kx, by = b[0] * ky;
+    const dx = bx - ax, dy = by - ay; const l2 = dx * dx + dy * dy;
+    const t = l2 ? Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / l2)) : 0;
+    return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+  }
+  function localStreet(p) {
+    let best = null, bd = 60;
+    for (const [name, segs] of STREETS) for (const seg of segs) {
+      if (Math.abs(seg[0][0] - p.lat) > 0.01 || Math.abs(seg[0][1] - p.lng) > 0.015) continue;
+      for (let i = 1; i < seg.length; i++) { const d = segDist(p, seg[i - 1], seg[i]); if (d < bd) { bd = d; best = name; } }
+    }
+    return best;
+  }
+  let streetBusy = false;
+  async function maybeStreet(force) {
+    if (!state.pos || streetBusy) return;
+    const loc = localStreet(state.pos);
+    if (loc) { state.street = loc; updateTop(); }
+    if (!force) return;
+    const now = Date.now();
+    streetBusy = true; state.streetAt = { lat: state.pos.lat, lng: state.pos.lng, t: now };
+    try {
+      let road = '', num = '', area = '';
+      try {
+        const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${state.pos.lat}&lon=${state.pos.lng}&format=jsonv2&zoom=17&accept-language=fr`);
+        if (!r.ok) throw new Error('nominatim ' + r.status);
+        const a = (await r.json()).address || {};
+        road = a.road || a.pedestrian || a.footway || a.square || ''; num = a.house_number ? ' ' + a.house_number : ''; area = a.neighbourhood || a.suburb || '';
+      } catch (e1) {
+        const r = await fetch(`https://photon.komoot.io/reverse?lat=${state.pos.lat}&lon=${state.pos.lng}&lang=fr`);
+        const f = ((await r.json()).features || [])[0]; const a = f ? f.properties : {};
+        road = a.street || (a.osm_key === 'highway' ? a.name : '') || ''; num = a.housenumber ? ' ' + a.housenumber : ''; area = a.district || a.locality || '';
+      }
+      if (road || area) { state.street = road ? road + num : area; updateTop(); }
+    } catch (e) { /* offline: la stå */ } finally { streetBusy = false; }
+  }
+
+  // ---------- Toppfelt ----------
+  function quarterAt(pt) {
+    const districts = POIS.filter(p => p.cat === 'bydel' && haversine(pt, p) <= p.radius).sort((a, b) => a.radius - b.radius);
+    return districts[0] || null;
+  }
+  function updateTop() {
+    if (!state.pos) return;
+    const arr = arrondissementAt(state.pos);
+    const el = $('#arrNum');
+    const q = quarterAt(state.pos);
+    if (arr) { el.innerHTML = ordinal(arr); el.className = ''; }
+    else { el.textContent = 'Utenfor'; el.className = 'outside'; }
+    const info = ARRINFO[arr];
+    $('#topQuarter').textContent = q && q.radius < 1000 ? q.name : (info ? info.quarter : (q ? q.name : 'Utenfor Lyon'));
+    const parts = [];
+    if (state.street) parts.push(state.street);
+    if (arr && info) parts.push(info.name);
+    else if (!arr) parts.push('Utenfor Lyons bygrense');
+    if (state.source === 'manual') parts.push('manuell posisjon');
+    $('#topStreet').textContent = parts.join(' · ');
+  }
+
+  // ---------- Søk i steder ----------
+  function nearestPoiTo(pt, maxM) {
+    let best = null, bd = Infinity;
+    POIS.forEach(p => { if (p.cat === 'bydel') return; const d = haversine(pt, p); if (d < bd) { bd = d; best = p; } });
+    return bd <= maxM ? best : null;
+  }
+  function withDistances(pt) {
+    return POIS.map(p => ({ p, d: haversine(pt, p) })).sort((a, b) => a.d - b.d);
+  }
+
+  // ---------- Visninger ----------
+  const content = $('#content');
+  const sheet = $('#sheet');
+  function showView(v) {
+    state.view = v; state.detail = null;
+    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === v)));
+    sheet.classList.remove('peek'); if (v !== 'here') sheet.classList.remove('full');
+    render();
+  }
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { if (state.view === t.dataset.view && !state.detail) sheet.classList.toggle('peek'); else showView(t.dataset.view); }));
+
+  function render() {
+    content.scrollTop = 0;
+    if (state.detail) return renderDetail(state.detail);
+    ({ here: renderHere, program: renderProgram, places: renderPlaces, arr: renderArr })[state.view]();
+  }
+
+  function poiCard(p, d, hit) {
+    return `<div class="card btn ${hit ? 'hit' : ''}" data-poi="${p.id}" role="button" tabindex="0">
+      <div class="row"><h3>${esc(p.name)}</h3><span class="dist">${hit ? 'Her' : fmtDist(d)}</span></div>
+      <div class="row"><span class="sub">${esc(p.sub || '')}</span><span class="pill cat-${p.cat}">${esc(p.cat)}</span></div>
+      <div>${esc(p.short || '')}</div>
+    </div>`;
+  }
+
+  function renderHere() {
+    if (!state.pos) {
+      content.innerHTML = `<div class="eyebrow">Posisjon</div>
+        <div class="card"><h3>Hvor er vi?</h3><div class="note">Trykk på GPS-knappen øverst til høyre for å la appen følge dere. Du kan også holde fingeren på et punkt i kartet for å sette posisjonen manuelt, for eksempel når dere planlegger ved bordet.</div>
+        <div class="actions"><button class="act primary" id="startGps">Bruk GPS</button><button class="act" data-goto="45.7577,4.8321">Prøv Bellecour</button></div></div>
+        ${installHint()}`;
+      $('#startGps').addEventListener('click', startGps);
+      return;
+    }
+    const arr = arrondissementAt(state.pos);
+    const info = ARRINFO[arr];
+    const all = withDistances(state.pos);
+    const hits = all.filter(x => x.p.cat !== 'bydel' && x.d <= (x.p.radius || 60));
+    const near = all.filter(x => x.p.cat !== 'bydel' && x.d > (x.p.radius || 60)).slice(0, 8);
+    const districts = all.filter(x => x.p.cat === 'bydel' && x.d <= x.p.radius).sort((a, b) => a.p.radius - b.p.radius);
+    let h = '';
+    if (hits.length) { h += `<div class="eyebrow">Dere står ved</div>` + hits.map(x => poiCard(x.p, x.d, true)).join(''); }
+    h += `<div class="eyebrow">I nærheten</div><div class="list">` + near.map(x => `<div class="item" data-poi="${x.p.id}"><div><div class="n">${esc(x.p.name)}</div><div class="s">${esc(x.p.sub || '')}</div></div><div class="d">${fmtDist(x.d)}</div></div>`).join('') + `</div>`;
+    h += `<div class="actions"><button class="act" id="streetBtn">Hvilken gate?</button><button class="act" id="wikiBtn">Wikipedia i nærheten</button></div>`;
+    if (state.wiki && state.wiki.at && haversine(state.wiki.at, state.pos) < 120) h += renderWiki(state.wiki.items);
+    if (districts.length) { h += `<div class="eyebrow">Området</div>` + districts.map(x => `<div class="card btn" data-poi="${x.p.id}"><h3>${esc(x.p.name)}</h3><div class="sub">${esc(x.p.sub || '')}</div><div>${esc(x.p.short || '')}</div></div>`).join(''); }
+    if (info) h += `<div class="eyebrow">${esc(info.name)}</div><div class="card btn" data-arr="${arr}"><h3>${esc(info.quarter)}</h3><div>${esc(info.text)}</div></div>`;
+    content.innerHTML = h;
+    $('#streetBtn').addEventListener('click', () => { state.street = ''; maybeStreet(true); toast('Slår opp gatenavn …'); });
+    $('#wikiBtn').addEventListener('click', loadWiki);
+  }
+  function renderWiki(items) {
+    if (!items) return '';
+    if (!items.length) return `<div class="note" style="margin-top:8px">Ingen Wikipedia-artikler innen 200 m.</div>`;
+    return `<div class="eyebrow">Wikipedia (fransk), nærmest først</div><div class="list">` + items.map(w => `<a class="item" href="https://fr.wikipedia.org/?curid=${w.pageid}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div><div class="n">${esc(w.title)}</div><div class="s">${esc(w.extract || '')}</div></div><div class="d">${fmtDist(w.dist)}</div></a>`).join('') + `</div>`;
+  }
+  async function loadWiki() {
+    if (!state.pos) return;
+    toast('Henter fra Wikipedia …');
+    try {
+      const u = `https://fr.wikipedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${state.pos.lat}|${state.pos.lng}&ggsradius=200&ggslimit=8&prop=extracts|coordinates&exintro=1&explaintext=1&exsentences=1&exlimit=8&format=json&origin=*`;
+      const j = await (await fetch(u)).json();
+      const pages = Object.values((j.query && j.query.pages) || {});
+      const items = pages.map(pg => ({ pageid: pg.pageid, title: pg.title, extract: pg.extract, dist: pg.coordinates ? haversine(state.pos, { lat: pg.coordinates[0].lat, lng: pg.coordinates[0].lon }) : 0 })).sort((a, b) => a.dist - b.dist);
+      state.wiki = { at: { ...state.pos }, items };
+      if (state.view === 'here' && !state.detail) render();
+    } catch (e) { toast('Fikk ikke kontakt med Wikipedia'); }
+  }
+  function installHint() {
+    const standalone = window.navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+    if (standalone) return '';
+    return `<div class="eyebrow">Legg på hjemskjermen</div><div class="card"><div class="note">I Safari: trykk Del-knappen og velg «Legg til på Hjem-skjerm». Da åpner guiden som en egen app i fullskjerm og husker kart og innhold.</div></div>`;
+  }
+
+  function renderDetail(id) {
+    const p = POIS.find(x => x.id === id); if (!p) { state.detail = null; return render(); }
+    const d = state.pos ? haversine(state.pos, p) : null;
+    const paras = String(p.text || '').split(/\n\s*\n/).map(t => `<p>${esc(t)}</p>`).join('');
+    const info = ARRINFO[p.arr];
+    content.innerHTML = `<div class="detail">
+      <button class="back" id="backBtn">‹ Tilbake</button>
+      <h2>${esc(p.name)}</h2>
+      <div class="lead">${esc(p.sub || '')}${info ? ' · ' + esc(info.name) : ''}${d != null ? ' · ' + fmtDist(d) + ' unna' : ''}</div>
+      <div class="row" style="justify-content:flex-start;gap:6px;margin-bottom:10px"><span class="pill cat-${p.cat}">${esc(p.cat)}</span></div>
+      ${paras}
+      ${p.lookFor ? `<div class="lookfor"><b>Se etter:</b> ${esc(p.lookFor)}</div>` : ''}
+      ${p.facts && p.facts.length ? `<div class="eyebrow">Visste du at</div><ul class="facts">${p.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
+      <div class="actions"><button class="act primary" id="showOnMap">Vis på kartet</button><a class="act" style="text-decoration:none" href="https://fr.wikipedia.org/w/index.php?search=${encodeURIComponent(p.name + ' Lyon')}" target="_blank" rel="noopener">Wikipedia</a><a class="act" style="text-decoration:none" href="https://maps.apple.com/?daddr=${p.lat},${p.lng}&dirflg=w" target="_blank" rel="noopener">Veibeskrivelse</a></div>
+    </div>`;
+    $('#backBtn').addEventListener('click', () => { state.detail = null; render(); });
+    $('#showOnMap').addEventListener('click', () => { map.setView([p.lat, p.lng], 17); sheet.classList.add('peek'); });
+  }
+  function openDetail(id) { state.detail = id; sheet.classList.remove('peek'); render(); }
+
+  function legIcon(mode) {
+    return mode === 'foot'
+      ? '<svg viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.6"/><path d="M11 21l2-6 2 2v4M9 13l2-4 3-1 2 3 2 1M11 9l-2 5-2 2"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M3 13l2-5h14l2 5v5H3z"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/><path d="M3 13h18"/></svg>';
+  }
+  function renderProgram() {
+    const day = PLAN[state.day];
+    let h = `<div class="days">` + PLAN.map((d, i) => `<button class="day" data-day="${i}" aria-selected="${i === state.day}"><b>${esc(d.day)}</b><small>${esc(d.date)}</small></button>`).join('') + `</div>`;
+    h += `<div class="tl">`;
+    const nowStop = (() => { if (!state.pos) return -1; let best = -1, bd = 150; day.items.forEach((it, i) => { if (it.place && PLACES[it.place]) { const [lat, lng] = PLACES[it.place]; const d = haversine(state.pos, { lat, lng }); if (d < bd) { bd = d; best = i; } } }); return best; })();
+    day.items.forEach((it, i) => {
+      if (it.leg) {
+        const r = ROUTES[it.leg];
+        h += `<div></div><div class="leg" data-leg="${it.leg}">${legIcon(r ? r.mode : 'foot')}${r ? `<b>${r.min} min · ${fmtDist(r.dist)}</b>` : ''}<span class="lbl">${esc(it.label || '')}</span></div>`;
+      } else {
+        h += `<div class="t">${esc(it.time || '')}</div><div class="stop ${i === nowStop ? 'now' : ''}" data-place="${it.place || ''}" data-idx="${i}"><div class="n">${esc(it.title)}</div>${it.note ? `<div class="note">${esc(it.note)}</div>` : ''}</div>`;
+      }
+    });
+    h += `</div>`;
+    // Oppsummering av dagens gåing
+    const foot = day.items.filter(it => it.leg && ROUTES[it.leg] && ROUTES[it.leg].mode === 'foot').map(it => ROUTES[it.leg]);
+    const car = day.items.filter(it => it.leg && ROUTES[it.leg] && ROUTES[it.leg].mode === 'car').map(it => ROUTES[it.leg]);
+    const sum = a => a.reduce((s, r) => s + r.dist, 0), mins = a => a.reduce((s, r) => s + r.min, 0);
+    h += `<div class="note" style="margin-top:12px">${foot.length ? `Til fots i dag: ca. ${fmtDist(sum(foot))}, ${mins(foot)} min i rolig tempo.` : ''} ${car.length ? `Bil: ${fmtDist(sum(car))}, ${mins(car)} min uten kø.` : ''}</div>`;
+    content.innerHTML = h;
+    content.querySelectorAll('.day').forEach(b => b.addEventListener('click', () => { state.day = +b.dataset.day; try { localStorage.setItem('lyon.day', state.day); } catch (e) {} drawDay(state.day); render(); }));
+    content.querySelectorAll('.stop').forEach(s => s.addEventListener('click', () => {
+      const pl = PLACES[s.dataset.place]; if (!pl) return;
+      map.setView(pl, 16); sheet.classList.add('peek');
+      const poi = nearestPoiTo({ lat: pl[0], lng: pl[1] }, 80); if (poi) { openDetail(poi.id); sheet.classList.add('peek'); }
+    }));
+    content.querySelectorAll('.leg').forEach(l => l.addEventListener('click', () => { const line = routeLines[l.dataset.leg]; if (line) { map.fitBounds(line.getBounds(), { padding: [30, 30] }); sheet.classList.add('peek'); } }));
+  }
+
+  let query = '';
+  function renderPlaces() {
+    const q = query.trim().toLowerCase();
+    const list = POIS.filter(p => !q || (p.name + ' ' + (p.sub || '') + ' ' + p.cat).toLowerCase().includes(q));
+    const groups = {};
+    list.forEach(p => { (groups[p.arr] = groups[p.arr] || []).push(p); });
+    const order = Object.keys(groups).map(Number).sort((a, b) => (a === 0 ? 99 : a) - (b === 0 ? 99 : b));
+    let h = `<input type="search" id="q" placeholder="Søk i ${POIS.length} steder" value="${esc(query)}" autocomplete="off">`;
+    order.forEach(a => {
+      const info = ARRINFO[a];
+      h += `<div class="eyebrow">${a === 0 ? 'Utenfor Lyon' : esc(info ? info.name + ' · ' + info.quarter : 'Lyon ' + a)}</div><div class="list">`;
+      groups[a].sort((x, y) => x.name.localeCompare(y.name, 'fr')).forEach(p => {
+        const d = state.pos ? haversine(state.pos, p) : null;
+        h += `<div class="item" data-poi="${p.id}"><div><div class="n">${esc(p.name)}</div><div class="s">${esc(p.sub || '')}</div></div><div class="d">${d != null ? fmtDist(d) : ''}</div></div>`;
+      });
+      h += `</div>`;
+    });
+    content.innerHTML = h;
+    const inp = $('#q');
+    inp.addEventListener('input', () => { query = inp.value; const pos = inp.selectionStart; render(); const n = $('#q'); n.focus(); n.setSelectionRange(pos, pos); });
+  }
+
+  function renderArr() {
+    let h = `<div class="eyebrow">Lyons ni arrondissement</div><div class="note" style="margin-bottom:8px">Nummereringen går ikke i spiral som i Paris. 1er og 2e deler Presqu'île, 3e til 8e ligger øst for Rhône, 5e og 9e vest for Saône, og 4e er platået på Croix-Rousse.</div>`;
+    for (let a = 1; a <= 9; a++) { const i = ARRINFO[a]; h += `<div class="card btn" data-arr="${a}"><div class="row"><h3>${esc(i.name)}</h3><span class="dist">${POIS.filter(p => p.arr === a && p.cat !== 'bydel').length} steder</span></div><div class="sub">${esc(i.quarter)}</div><div>${esc(i.text)}</div></div>`; }
+    content.innerHTML = h;
+  }
+
+  // Felles klikkhåndtering i innholdet
+  content.addEventListener('click', e => {
+    const poi = e.target.closest('[data-poi]'); if (poi) { openDetail(poi.dataset.poi); return; }
+    const arr = e.target.closest('[data-arr]'); if (arr) { const f = ARR.features.find(x => x.properties.arr === +arr.dataset.arr); if (f) { map.fitBounds(L.geoJSON(f).getBounds()); sheet.classList.add('peek'); } return; }
+    const go = e.target.closest('[data-goto]'); if (go) { const [lat, lng] = go.dataset.goto.split(',').map(Number); stopGps(); setPos(lat, lng, 0, 'manual'); map.setView([lat, lng], 16); return; }
+  });
+  content.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.dataset.poi) openDetail(e.target.dataset.poi); });
+
+  // Draing av bunnarket
+  const grip = $('#grip');
+  let dragY = null;
+  grip.addEventListener('pointerdown', e => { dragY = e.clientY; grip.setPointerCapture(e.pointerId); });
+  grip.addEventListener('pointerup', e => {
+    if (dragY == null) return; const dy = e.clientY - dragY; dragY = null;
+    if (dy < -30) { if (sheet.classList.contains('peek')) sheet.classList.remove('peek'); else sheet.classList.add('full'); }
+    else if (dy > 30) { if (sheet.classList.contains('full')) sheet.classList.remove('full'); else sheet.classList.add('peek'); }
+    else { sheet.classList.toggle('peek'); }
+    setTimeout(() => map.invalidateSize(), 260);
+  });
+
+  // Toast
+  let toastT;
+  function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+
+  // Service worker for offline-bruk (bare over https eller localhost)
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  render();
+  // Start GPS automatisk når appen kjører som installert app
+  if (window.navigator.standalone || matchMedia('(display-mode: standalone)').matches) startGps();
+})();
+</script>
+</body>
+</html>

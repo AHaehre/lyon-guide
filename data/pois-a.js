@@ -1,0 +1,367 @@
+// Vieux Lyon (5e) og Fourvière. Koordinater verifisert mot OpenStreetMap (Photon/Overpass).
+window.LYON_POIS = (window.LYON_POIS || []).concat([
+  {
+    id: "vieux-lyon",
+    name: "Vieux Lyon",
+    sub: "Renessansebyen ved Saône",
+    cat: "bydel", arr: 5,
+    lat: 45.7625, lng: 4.8272, radius: 350,
+    short: "Dere står i Vieux Lyon, et av Europas største sammenhengende renessansekvartaler, og på UNESCOs verdensarvliste siden 1998.",
+    text: "Vieux Lyon er stripen mellom Saône og Fourvière-høyden, delt i tre sogn: Saint-Paul i nord, Saint-Jean i midten og Saint-Georges i sør. Her lå middelalderbyen, og her bygde italienske bankierer og lyonske silkehandlere seg opp på 1400- og 1500-tallet, da Lyon var et av Europas viktigste handelssentre med fire store messer i året.\n\nDet dere ser i gatene er i stor grad den byen de bygde: smale gotiske og renessansefasader, gårdsrom med åpne trappetårn, gallerier og de berømte traboulene, passasjene som går tvers gjennom kvartalene fra gate til gate.\n\nAt bydelen står i dag er ikke selvsagt. På 1950- og 60-tallet var den nedslitt og dømt til riving for en bilvei langs Saône. Beboere og arkitekter protesterte, og i 1964 ble Vieux Lyon Frankrikes første beskyttede bevaringsområde under Malraux-loven. I 1998 ble hele det historiske Lyon, rundt 500 hektar, skrevet inn på UNESCOs verdensarvliste.",
+    facts: ["Vieux Lyon var det første «secteur sauvegardé» i Frankrike, vernet i 1964.", "Rundt 300 bygninger her er fra middelalderen og renessansen.", "Bydelen har tre sogn med hver sin kirke: Saint-Paul, Saint-Jean og Saint-Georges."],
+    lookFor: "Se opp. Vinduene i gotisk stil har spissbuer og steinsprosser, renessansevinduene er rektangulære med fine lister. Mange fasader har begge deler."
+  },
+  {
+    id: "fourviere",
+    name: "Fourvière",
+    sub: "Høyden der Lyon ble grunnlagt",
+    cat: "bydel", arr: 5,
+    lat: 45.7620, lng: 4.8215, radius: 300,
+    short: "Dette er Fourvière, høyden der romerne grunnla Lugdunum i år 43 før Kristus, og der byen fortsatt ber.",
+    text: "Fourvière er Lyons fødested. I år 43 f.Kr. anla den romerske senatoren Lucius Munatius Plancus kolonien Lugdunum her oppe, på et platå med utsikt over sammenløpet mellom Rhône og Saône. Byen ble hovedstad for de tre galliske provinsene, og keiserne Claudius og Caracalla ble født her.\n\nNavnet kommer fra latin, Forum vetus, det gamle forum, som med tiden ble til Fourvière. Da byen i middelalderen flyttet ned til elvebredden, ble høyden overlatt til vinmarker, klostre og kirker. Derfor kalles den «la colline qui prie», høyden som ber, i motsetning til Croix-Rousse på den andre siden av Saône, «la colline qui travaille», høyden som arbeider.\n\nI dag har høyden både byens mest kjente silhuett, basilikaen, og dens eldste monumenter, de romerske teatrene. Mellom dem ligger stille hager og en utsikt som på klare dager rekker helt til Mont Blanc.",
+    facts: ["Lugdunum ble grunnlagt i 43 f.Kr. og var hovedstad for Gallia.", "Keiserne Claudius (10 f.Kr.) og Caracalla (188) ble født i Lyon.", "Toppen av Tour métallique er Lyons høyeste punkt, rundt 372 meter over havet."]
+  },
+  {
+    id: "cathedrale-saint-jean",
+    name: "Cathédrale Saint-Jean-Baptiste",
+    sub: "Primatialkatedralen",
+    cat: "kirke", arr: 5,
+    lat: 45.76071, lng: 4.82742, radius: 70,
+    short: "Katedralen Saint-Jean ble bygget over tre hundre år, fra 1180 til rundt 1480, og er sete for erkebiskopen som bærer tittelen Primat des Gaules.",
+    text: "Primatiale Saint-Jean-Baptiste er Lyons katedral og hovedkirke for erkebiskopen, som siden 1079 bærer tittelen «Primat des Gaules», den fremste blant Gallias biskoper. Byggingen begynte rundt 1180 i romansk stil, i koret, og ble avsluttet rundt 1480 med den gotiske vestfasaden. Derfor kan dere lese arkitekturhistorien ved å gå fra alteret og ut mot plassen.\n\nHer skjedde to av Frankrikes store seremonier. I 1316 ble pave Johannes XXII kronet her, og i desember 1600 giftet Henrik IV seg med Maria de' Medici i denne kirken. Fasaden har over 300 medaljonger med bibelske scener, stjernetegn og dagligliv, hugget på 1300-tallet. Mange av hodene ble slått av under religionskrigene og revolusjonen.\n\nInne står det astronomiske uret, et av de eldste i Europa, med deler fra 1300-tallet. Det viser dato, måneposisjon og helgendager og spiller med små figurer. På nordsiden ligger den arkeologiske hagen med rester av to forsvunne kirker, Sainte-Croix og Saint-Étienne, og ved sørsiden står Manécanterie, korskolen fra 1100-tallet, en av byens eldste bygninger.",
+    facts: ["Henrik IV giftet seg med Maria de' Medici her i 1600.", "Det astronomiske uret har deler fra 1300-tallet og er blant Europas eldste.", "Fasaden har over 300 medaljonger fra 1300-tallet.", "Manécanterie ved siden av er fra 1100-tallet."],
+    lookFor: "Se på rosevinduet fra 1392 over hovedportalen, og på de små medaljongene på begge sider av portalene. Inne: det astronomiske uret i nordre tverrskip."
+  },
+  {
+    id: "place-saint-jean",
+    name: "Place Saint-Jean",
+    sub: "Plassen foran katedralen",
+    cat: "plass", arr: 5,
+    lat: 45.76083, lng: 4.82660, radius: 60,
+    short: "Place Saint-Jean er hjertet i Vieux Lyon, med fontenen fra 1844 som viser Johannes som døper Jesus.",
+    text: "Plassen foran katedralen ble åpnet opp på 1800-tallet, da flere hus ble revet for å gi kirken luft. Fontenen i midten er fra 1844 og viser Johannes døperen som døper Kristus, en passende scene foran en kirke viet nettopp til ham.\n\nPlassen er møtestedet i Vieux Lyon. Herfra går Rue Saint-Jean nordover gjennom hele bydelen, og rett vest ligger stasjonen for metro og funikulærer opp til Fourvière.",
+    facts: ["Fontenen fra 1844 viser Jesu dåp.", "Funikulærstasjonen ligger femti meter unna, ved Avenue Adolphe Max."]
+  },
+  {
+    id: "palais-de-justice",
+    name: "Palais de Justice historique",
+    sub: "De 24 søylene",
+    cat: "bygning", arr: 5,
+    lat: 45.76190, lng: 4.82794, radius: 70,
+    short: "Dette er det gamle justispalasset, i Lyon bare kalt «les 24 colonnes», bygget 1835 til 1847 og stedet for rettssaken mot Klaus Barbie i 1987.",
+    text: "Lyonerne kaller aldri denne bygningen for Palais de Justice. De sier «les 24 colonnes», etter de tjuefire korintiske søylene som vender mot Saône. Bygget ble reist mellom 1835 og 1847 etter tegninger av Louis-Pierre Baltard, i streng nyklassisisme, på stedet der byens rettsvesen hadde holdt til siden middelalderen.\n\nHer ble Klaus Barbie, Gestapo-sjefen i Lyon kjent som «slakteren fra Lyon», dømt til livstid for forbrytelser mot menneskeheten i 1987. Det var den første rettssaken av sitt slag i Frankrike. Rettssalen ble restaurert og bygningen huser i dag appelldomstolen.",
+    facts: ["Arkitekt Louis-Pierre Baltard, bygget 1835 til 1847.", "Klaus Barbie ble dømt her i 1987.", "Fasaden er best sett fra den andre siden av Saône, fra Quai des Célestins."],
+    lookFor: "Tell søylene fra elvesiden. Fra Passerelle du Palais de Justice får dere hele fasaden i ett bilde."
+  },
+  {
+    id: "musee-gadagne",
+    name: "Musées Gadagne",
+    sub: "Bymuseum og marionetter",
+    cat: "museum", arr: 5,
+    lat: 45.76405, lng: 4.82729, radius: 50,
+    short: "Hôtel de Gadagne er Vieux Lyons største renessansepalass, bygget av florentinske bankierer så rike at «rik som Gadagne» ble et uttrykk.",
+    text: "Dette renessansepalasset ble bygget tidlig på 1500-tallet for familien Pierrevive og kjøpt i 1545 av brødrene Thomas og Guillaume de Gadagne, bankierer fra Firenze som finansierte både konger og kriger. De var så velstående at «riche comme Gadagne» ble et fast uttrykk i Lyon.\n\nI dag huser bygget to museer: Musée d'histoire de Lyon, som forteller byens historie fra Lugdunum til i dag, og Musée des arts de la marionnette, med Guignol i hovedrollen. Etter en elleve år lang restaurering åpnet museene igjen i 2009, og oppe på taket ligger en hengende hage med utsikt over gamlebyen. Hagen og kafeen kan besøkes uten museumsbillett.",
+    facts: ["«Riche comme Gadagne» betyr fortsatt styrtrik på lyonsk.", "Den hengende hagen på toppen er gratis og lite kjent.", "Restaureringen tok elleve år og kostet rundt 30 millioner euro."],
+    lookFor: "Gå inn i gårdsrommet og se trappetårnene og galleriene i flere etasjer, typisk for de rike handelshusene i Lyon."
+  },
+  {
+    id: "rue-saint-jean",
+    name: "Rue Saint-Jean",
+    sub: "Hovedgaten i gamlebyen",
+    cat: "gate", arr: 5,
+    lat: 45.76136, lng: 4.82714, radius: 60,
+    short: "Rue Saint-Jean er ryggraden i Vieux Lyon, en middelaldergate kantet av renessansehus, bouchons og innganger til traboulene.",
+    text: "Rue Saint-Jean går fra katedralen i sør til Place du Change i nord og har vært bydelens hovedgate siden middelalderen. Nesten hvert hus her er fra 1400- eller 1500-tallet, og bak de smale fasadene skjuler det seg gårdsrom med trappetårn og gallerier.\n\nGaten er også hovedinngangen til traboulene. Nummer 54 er starten på Longue Traboule, nummer 27 fører gjennom til Rue des Trois-Maries, og i nummer 60 ligger Maison des Avocats med sine rosa gallerier. I dag er gaten full av bouchons, de tradisjonelle lyonske spisestedene, av varierende kvalitet. De beste ligger gjerne i sidegatene.",
+    facts: ["Gaten er rundt 400 meter lang og nesten helt fra renessansen.", "Traboulene i nr. 54 og nr. 27 er åpne for publikum på dagtid.", "Mange dører har små skilt med «traboule» eller en stilisert passasje, det er lov å gå inn."],
+    lookFor: "Stopp foran dørene med skilt om traboule. Døren er ofte åpen eller har en knapp, gå rolig inn, det er en offentlig avtale med byen."
+  },
+  {
+    id: "rue-du-boeuf",
+    name: "Rue du Bœuf",
+    sub: "Gaten med oksen",
+    cat: "gate", arr: 5,
+    lat: 45.76265, lng: 4.82692, radius: 60,
+    short: "Rue du Bœuf har navnet fra en steinokse på hushjørnet ved Place Neuve Saint-Jean, og rommer Tour Rose og noen av gamlebyens fineste gårdsrom.",
+    text: "Rue du Bœuf løper parallelt med Rue Saint-Jean, et kvartal lenger inn mot høyden, og er roligere og finere. Navnet kommer fra en steinskulptur av en okse som står på hushjørnet mot Place Neuve Saint-Jean, satt opp på 1600-tallet.\n\nHer ligger Tour Rose i nummer 16, Maison de l'Outarde d'Or i nummer 19 med sitt utskårne skilt, og utgangen av Longue Traboule i nummer 27. Gaten var lenge et adressested for gode restauranter, og er det fortsatt.",
+    facts: ["Oksen på hjørnet er fra 1600-tallet.", "Nr. 19, Maison de l'Outarde d'Or, har et av byens eldste butikkskilt i stein."],
+    lookFor: "Finn oksen oppe på hjørnet ved Place Neuve Saint-Jean, og gå inn i gårdsrommet i nr. 16 for å se Tour Rose."
+  },
+  {
+    id: "tour-rose",
+    name: "La Tour Rose",
+    sub: "Det rosa trappetårnet",
+    cat: "bygning", arr: 5,
+    lat: 45.76296, lng: 4.82693, radius: 40,
+    short: "Tour Rose er det mest fotograferte trappetårnet i Vieux Lyon, et renessansetårn fra 1500-tallet i rosa puss, inne i gården til 16 rue du Bœuf.",
+    text: "Inne i gården til nummer 16 står et rundt trappetårn i rosa puss, bygget på 1500-tallet. Slike tårn var renessansens løsning for trapper: i stedet for å ta plass inne i huset ble trappen lagt i et eget tårn i gårdsrommet, med gallerier ut til hver etasje. Den rosa fargen er typisk for Lyon, der fasader tradisjonelt ble pusset i varme oker- og rosatoner.\n\nBygget huset i mange år hotellet og restauranten La Tour Rose, et av byens gastronomiske navn på 1980- og 90-tallet. I dag drives det fortsatt som hotell og restaurant.",
+    facts: ["Trappetårn i gården var renessansens svar på plassmangel.", "Rosa og oker er Lyons tradisjonelle fasadefarger."],
+    lookFor: "Stå i gårdsrommet og se oppover: tårnet, galleriene og de små vinduene som følger trappen."
+  },
+  {
+    id: "maison-du-chamarier",
+    name: "Maison du Chamarier",
+    sub: "Kannikens hus fra 1496",
+    cat: "bygning", arr: 5,
+    lat: 45.76174, lng: 4.82720, radius: 40,
+    short: "Maison du Chamarier i 37 rue Saint-Jean ble bygget rundt 1496 for domkapittelets forvalter, og har en brønn i gården som tilskrives Philibert Delorme.",
+    text: "Chamarier var tittelen på kanniken som forvaltet katedralens eiendom og nøkler, en av de mektigste stillingene i byen. François d'Estaing lot bygge dette huset rundt 1496, i overgangen mellom gotikk og renessanse, og det er et av de best bevarte gotiske borgerhusene i Lyon.\n\nGårdsrommet har et trappetårn med spiraltrapp og en brønn med et fint utskåret overbygg som tilskrives Philibert Delorme, Lyons store renessansearkitekt. Huset ble omfattende restaurert på 2010-tallet.",
+    facts: ["Bygget ca. 1496 for François d'Estaing, chamarier ved katedralen.", "Brønnen i gården tilskrives Philibert Delorme."],
+    lookFor: "Fasaden mot Rue Saint-Jean har gotiske vinduer med fine steinprofiler. Kikk inn i gården hvis porten står åpen."
+  },
+  {
+    id: "maison-thomassin",
+    name: "Maison Thomassin",
+    sub: "Et av byens eldste hus",
+    cat: "bygning", arr: 5,
+    lat: 45.76436, lng: 4.82876, radius: 40,
+    short: "Maison Thomassin på Place du Change er et av de eldste husene i Lyon, med en gotisk fasade fra 1493 og kongelige våpenskjold over vinduene.",
+    text: "Huset på hjørnet av Place du Change har en historie tilbake til 1298, men fasaden dere ser ble bygget om i 1493 av familien Thomassin, rike klesdhandlere. Den er et av de reneste eksemplene på senmiddelalderens borgerarkitektur i Lyon, med spissbuede vinduer og rike steinprofiler.\n\nSe på våpenskjoldene mellom vinduene i første etasje: Frankrikes liljer, Dauphinés delfin, og våpnene til kong Karl VIII og dronning Anne av Bretagne. Det var en måte å vise lojalitet til kongen, og å minne naboene om hvem man hadde kontakt med.",
+    facts: ["Eldste deler fra 1298, fasaden fra 1493.", "Våpenskjoldene hører til Karl VIII og Anne av Bretagne."],
+    lookFor: "Våpenskjoldene i første etasje og de tre store spissbuede vinduene."
+  },
+  {
+    id: "loge-du-change",
+    name: "Loge du Change",
+    sub: "Renessansens børs, nå kirke",
+    cat: "bygning", arr: 5,
+    lat: 45.76448, lng: 4.82792, radius: 50,
+    short: "Loge du Change var Lyons første børs, bygget på 1600-tallet og ombygd av Soufflot i 1748, og er siden 1803 protestantisk kirke, Temple du Change.",
+    text: "Her møttes pengevekslerne og bankierene som gjorde Lyon til et av Europas finanssentre på 1500- og 1600-tallet. Den første børsbygningen ble reist på 1630-tallet, og mellom 1748 og 1750 ble den utvidet og fikk sin nåværende fasade av Jacques-Germain Soufflot, arkitekten som senere tegnet Panthéon i Paris.\n\nDa handelen flyttet til Presqu'île, mistet bygget sin funksjon. I 1803 ga Napoleon det til byens protestanter, og det er fortsatt protestantisk kirke under navnet Temple du Change.",
+    facts: ["Fasaden er av Soufflot, 1748 til 1750.", "Protestantisk kirke siden 1803."],
+    lookFor: "Den store klokken og de høye arkadene i første etasje, der pengevekslerne hadde bordene sine."
+  },
+  {
+    id: "place-du-change",
+    name: "Place du Change",
+    sub: "Pengevekslernes plass",
+    cat: "plass", arr: 5,
+    lat: 45.76447, lng: 4.82830, radius: 60,
+    short: "Place du Change var sentrum for Lyons store handelsmesser i renessansen, der italienske bankierer vekslet penger under åpen himmel.",
+    text: "Fra 1400-tallet hadde Lyon kongelig privilegium til fire store messer i året, og kjøpmenn fra hele Europa kom hit. Her på plassen vekslet bankierene penger og gjorde opp gjeld, først under åpen himmel, så i Loge du Change. Det var her veksler og kreditt mellom byer ble vanlig praksis i Frankrike.\n\nPlassen er omgitt av noen av gamlebyens eldste hus, med Maison Thomassin på hjørnet, og er et godt sted å stå og forestille seg Lyon rundt 1500: florentinere, tyskere og lyonere, silke, krydder og papir, og en by som var rikere enn Paris i noen tiår.",
+    facts: ["Lyons messer ble etablert fra 1420-tallet og gjorde byen til et europeisk finanssentrum.", "Mange av bankierene kom fra Firenze og Lucca."]
+  },
+  {
+    id: "eglise-saint-paul",
+    name: "Église Saint-Paul",
+    sub: "Romansk kirke i bankierkvarteret",
+    cat: "kirke", arr: 5,
+    lat: 45.76665, lng: 4.82710, radius: 60,
+    short: "Église Saint-Paul er den nordligste av gamlebyens tre kirker, romansk fra 1100-tallet med et åttekantet lanternetårn fra 1200-tallet.",
+    text: "Saint-Paul er den eldste av de tre sognene i Vieux Lyon, grunnlagt allerede på 500-tallet. Kirken dere ser er i hovedsak fra 1100-tallet, i romansk stil, med et karakteristisk åttekantet lanternetårn over krysset fra 1200-tallet. Spiret er fra 1800-tallet.\n\nKvarteret rundt kirken var der de italienske bankierene bodde i renessansen, og Rue Juiverie rett sør for kirken har flere av deres palasser.",
+    facts: ["Sognet er fra 500-tallet, kirken fra 1100-tallet.", "Det åttekantede tårnet er et av få romanske lanternetårn i regionen."],
+    lookFor: "Det åttekantede tårnet med små buede vinduer, best sett fra plassen eller fra Saône-bredden."
+  },
+  {
+    id: "gare-saint-paul",
+    name: "Gare Saint-Paul",
+    sub: "Stasjonen fra 1876",
+    cat: "bygning", arr: 5,
+    lat: 45.76599, lng: 4.82789, radius: 60,
+    short: "Gare Saint-Paul fra 1876 er en liten endestasjon som fortsatt betjener forstedene vest for byen, og i dag også tram-train de l'Ouest lyonnais.",
+    text: "Stasjonen åpnet i 1876 som endepunkt for jernbanen vestover til Lozanne og Sain-Bel, og ble bygget med en fasade i Beaux-Arts-stil mot Place Saint-Paul. Det er en av få jernbanestasjoner i Frankrike som ligger midt i et verdensarvområde.\n\nI dag går tram-train herfra ut til forstedene i vest, og forplassen er et stille hjørne av gamlebyen som turistene sjelden kommer til.",
+    facts: ["Åpnet 1876 for linjene mot Lozanne og Sain-Bel.", "Tram-train de l'Ouest lyonnais går herfra siden 2012."]
+  },
+  {
+    id: "eglise-saint-georges",
+    name: "Église Saint-Georges",
+    sub: "Nygotisk kirke ved Saône",
+    cat: "kirke", arr: 5,
+    lat: 45.75768, lng: 4.82537, radius: 60,
+    short: "Église Saint-Georges er nygotisk fra 1840-årene og tegnet av Pierre Bossan, som senere tegnet basilikaen på Fourvière.",
+    text: "Kirken dere ser er ung etter Vieux Lyon-standard, bygget 1844 til 1848, men på stedet har det stått en kirke siden 500-tallet. Arkitekten var Pierre Bossan, en ung lyonsk arkitekt som tjue år senere skulle tegne Notre-Dame de Fourvière oppe på høyden. Her prøvde han ut den rike nygotiske stilen.\n\nSaint-Georges-kvarteret rundt kirken var i middelalderen under johanniterordenen, og på 1600- og 1700-tallet bodde silkeveverne her, før de flyttet opp til Croix-Rousse. Det er det roligste og minst turistpregede hjørnet av gamlebyen.",
+    facts: ["Bygget 1844 til 1848 av Pierre Bossan, arkitekten bak Fourvière-basilikaen.", "Silkeveverne bodde i Saint-Georges før Croix-Rousse ble deres bydel."],
+    lookFor: "Kirken speiler seg fint i Saône fra Passerelle Saint-Georges, med Fourvière bak."
+  },
+  {
+    id: "rue-juiverie",
+    name: "Rue Juiverie",
+    sub: "Bankierenes palasser",
+    cat: "gate", arr: 5,
+    lat: 45.76523, lng: 4.82736, radius: 60,
+    short: "Rue Juiverie var middelalderens jødiske kvarter og ble i renessansen bankierenes gate, med Galerie Philibert Delorme fra 1536 i nummer 8.",
+    text: "Navnet forteller om byens jødiske samfunn som bodde her i middelalderen, til jødene ble utvist fra Frankrike i 1394. På 1500-tallet flyttet italienske bankierer og kjøpmenn inn, og gaten fikk noen av byens flotteste renessansepalasser.\n\nI nummer 8 ligger Hôtel Bullioud, der Philibert Delorme i 1536 bygde et galleri på to trompe-buer tvers over gårdsrommet, hans første kjente verk etter at han kom hjem fra Roma. Det er et lite stykke italiensk renessanse midt i Lyon. I nummer 4 ligger Hôtel Paterin, kalt Maison Henri IV, med et storslått gårdsrom med arkader i tre etasjer.",
+    facts: ["Galerie Philibert Delorme (1536) i nr. 8 er arkitektens første kjente verk.", "Jødene ble utvist fra Lyon og Frankrike i 1394.", "Nr. 4, Hôtel Paterin, har et av byens største renessansegårdsrom."],
+    lookFor: "Gå inn porten i nr. 8 (ofte åpen på dagtid) og se galleriet som svever over gården på to små buede hjørner."
+  },
+  {
+    id: "longue-traboule",
+    name: "La Longue Traboule",
+    sub: "Den lengste traboulen",
+    cat: "traboule", arr: 5,
+    lat: 45.76216, lng: 4.82697, radius: 40,
+    short: "Dette er Longue Traboule, den lengste i Vieux Lyon, som går gjennom fire gårdsrom fra 54 rue Saint-Jean til 27 rue du Bœuf.",
+    text: "Longue Traboule er den klassiske: en passasje som starter i 54 rue Saint-Jean, går gjennom fire hus og fire gårdsrom, og kommer ut i 27 rue du Bœuf. Hvert gårdsrom har sin egen karakter, med trappetårn, gallerier og brønner, og lysforholdene skifter for hvert skritt.\n\nTraboulen er åpen for publikum på dagtid etter avtale mellom byen og eierne. Folk bor her, så gå stille og uten å rope. Det er en del av avtalen.",
+    facts: ["Går gjennom fire hus og fire gårdsrom.", "Inngang 54 rue Saint-Jean, utgang 27 rue du Bœuf."],
+    lookFor: "Se opp i hvert gårdsrom etter trappetårnene og galleriene. Bruk telefonens lommelykt i de mørkeste gangene."
+  },
+  {
+    id: "traboules",
+    name: "Les traboules",
+    sub: "Passasjene gjennom kvartalene",
+    cat: "traboule", arr: 5,
+    lat: 45.76300, lng: 4.82720, radius: 250,
+    short: "Traboulene er Lyons hemmelige gangveier gjennom husene, fra latin trans ambulare, å gå gjennom. Byen har rundt 500, og rundt 40 er åpne for publikum.",
+    text: "En traboule er en passasje som går fra en gate, gjennom et eller flere hus og gårdsrom, og ut i en annen gate. Ordet kommer fra latin, trans ambulare, å gå gjennom. De oppsto fordi Vieux Lyon er klemt mellom elven og høyden, med få gater parallelt med Saône. Traboulene var snarveier fra elven og opp i kvartalet, allerede på 300-tallet ifølge tradisjonen.\n\nI Vieux Lyon er de fra renessansen og vakre. Oppe på Croix-Rousse er de fra 1800-tallet og praktiske: silkeveverne bar stoffrullene gjennom dem, beskyttet mot regn, ned til handelsmennene. Under andre verdenskrig brukte motstandsbevegelsen dem til å forsvinne for Gestapo, som aldri lærte seg systemet.\n\nByen har rundt 500 traboules, og rundt 40 av dem er åpne for publikum på dagtid, etter en avtale der byen betaler for vedlikehold og eierne lar døren stå åpen.",
+    facts: ["Ordet kommer fra latin trans ambulare, å gå gjennom.", "Rundt 500 traboules i byen, rundt 40 åpne for publikum.", "Motstandsbevegelsen brukte dem under krigen for å unnslippe Gestapo."],
+    lookFor: "Let etter små skilt eller en liten bronsemarkør ved døren. En åpen dør inn til en mørk gang er ofte en invitasjon."
+  },
+  {
+    id: "traboule-du-gouverneur",
+    name: "Traboule du Gouverneur",
+    sub: "Fra plassen til kaien",
+    cat: "traboule", arr: 5,
+    lat: 45.76380, lng: 4.82866, radius: 40,
+    short: "Traboule du Gouverneur går fra 2 place du Gouvernement til 10 quai Romain Rolland, gjennom et gårdsrom fra 1500-tallet.",
+    text: "Denne traboulen går fra Place du Gouvernement, der kongens guvernør hadde residens på 1500-tallet, og ut på Quai Romain Rolland ved Saône. Gårdsrommet har et renessansetrappetårn og gallerier, og den lille plassen utenfor er en av gamlebyens vakreste, med en fontene og lite folk.",
+    facts: ["Inngang 2 place du Gouvernement, utgang 10 quai Romain Rolland.", "Guvernøren for Lyon bodde ved denne plassen på 1500-tallet."]
+  },
+  {
+    id: "passerelle-saint-georges",
+    name: "Passerelle Saint-Georges",
+    sub: "Gangbroen over Saône",
+    cat: "bygning", arr: 5,
+    lat: 45.75710, lng: 4.82628, radius: 60,
+    short: "Passerelle Saint-Georges er gangbroen fra Saint-Georges over til Presqu'île, første gang bygget i 1853 og gjenoppbygd etter at tyskerne sprengte den i 1944.",
+    text: "Den første gangbroen her kom i 1853 og knyttet det fattige Saint-Georges-kvarteret til kjøpmannsbyen på Presqu'île. I september 1944, da tyskerne trakk seg ut av Lyon, sprengte de nesten alle byens broer, også denne. Broen ble gjenoppbygd etter krigen.\n\nFra midten av broen har dere et av de klassiske Lyon-bildene: Saint-Georges-kirken, de pastellfargede husene langs kaien, og basilikaen på Fourvière over det hele.",
+    facts: ["Første bro 1853, sprengt av tyskerne i september 1944, gjenoppbygd.", "Tyskerne sprengte 20 av byens broer på to dager i 1944."],
+    lookFor: "Stå midt på broen og se mot nord: kirke, kaifasader og basilika på rekke."
+  },
+  {
+    id: "pont-bonaparte",
+    name: "Pont Bonaparte",
+    sub: "Broen fra Bellecour til Saint-Jean",
+    cat: "bygning", arr: 5,
+    lat: 45.75960, lng: 4.82840, radius: 80,
+    short: "Pont Bonaparte knytter Place Bellecour til Vieux Lyon. Dagens bro er fra 1950, etter at forgjengeren ble sprengt i 1944.",
+    text: "Her har det gått bro over Saône siden 1600-tallet, først Pont de l'Archevêché, erkebiskopens bro. Napoleon lot bygge en steinbro her i 1807 til 1810, som fikk navnet Pont Tilsitt etter freden i Tilsit. Den ble ødelagt i september 1944 da den tyske hæren sprengte broene før retretten.\n\nDagens bro i betong åpnet i 1950 og fikk navnet Bonaparte. Det er den naturlige gangveien mellom Bellecour og katedralen, og fra broen ser dere både Palais de Justice med søylene og hele rekken av gamlebyens fasader.",
+    facts: ["Napoleons bro fra 1810 het Pont Tilsitt.", "Dagens bro er fra 1950."]
+  },
+  {
+    id: "basilique-fourviere",
+    name: "Basilique Notre-Dame de Fourvière",
+    sub: "Lyons hvite krone",
+    cat: "kirke", arr: 5,
+    lat: 45.76230, lng: 4.82230, radius: 90,
+    short: "Basilikaen ble bygget 1872 til 1884 etter et løfte om å reise en kirke hvis Lyon ble spart for prøyssisk okkupasjon i 1870. Byen ble spart, og løftet holdt.",
+    text: "Notre-Dame de Fourvière er Lyons landemerke, synlig fra hele byen. Den ble bygget mellom 1872 og 1884 og innviet i 1896, etter at erkebiskop Ginoulhiac og byens borgerskap i 1870 hadde lovet å reise en kirke til jomfru Maria hvis den prøyssiske hæren ikke nådde Lyon. Den gjorde ikke det, og pengene kom fra private gaver.\n\nArkitekten Pierre Bossan tegnet en kirke som ikke ligner noe annet: bysantinsk, gotisk og romansk på en gang, med fire åttekantede tårn og et indre dekket av mosaikk, marmor og gull. Kritikerne kalte den «den omvendte elefanten», med de fire tårnene som bein i luften. Lyonerne elsker den likevel. Under hovedkirken ligger en hel andre kirke, krypten Saint-Joseph, mørkere og enklere.\n\nVed siden av står det eldre kapellet fra 1600-tallet med det gylne Maria-statuen på tårnet. Da statuen ble innviet 8. desember 1852, ble feiringen utsatt av regn, og om kvelden satte lyonerne spontant lys i vinduene. Det er opprinnelsen til Fête des Lumières, lysfesten som hvert år i desember fyller byen.",
+    facts: ["Bygget 1872 til 1884 etter et løfte fra 1870, finansiert av private gaver.", "Arkitekt Pierre Bossan, fullført av Sainte-Marie Perrin.", "Kalles «l'éléphant renversé», den omvendte elefanten.", "Fête des Lumières oppsto her 8. desember 1852."],
+    lookFor: "Gå inn og se mosaikkene i hovedkirken, så ned i krypten. Ute: den gylne Maria på det lille tårnet til høyre."
+  },
+  {
+    id: "esplanade-fourviere",
+    name: "Esplanade de Fourvière",
+    sub: "Utsikten over byen",
+    cat: "utsikt", arr: 5,
+    lat: 45.76275, lng: 4.82301, radius: 50,
+    short: "Fra esplanaden ser dere hele Lyon: Saône rett under, Presqu'île i midten, Rhône bak, og på klare dager Alpene med Mont Blanc i horisonten.",
+    text: "Dette er Lyons beste utsikt, og gratis. Rett under ligger Vieux Lyon med katedralen, så Saône, så Presqu'île med Place Bellecour, Hôtel de Ville og Opéra, deretter Rhône og de moderne tårnene ved Part-Dieu. Til venstre ligger Croix-Rousse, høyden som arbeider. På en klar dag står Mont Blanc i horisonten, rundt 160 kilometer unna.\n\nLes byen som en tidslinje fra vest mot øst: romerne på Fourvière, middelalderen og renessansen i Vieux Lyon, 1600- og 1700-tallet på Presqu'île, 1800-tallet på Rhônes østbredd, og 1900- og 2000-tallet i Part-Dieu og Confluence.",
+    facts: ["Mont Blanc er synlig på klare dager, rundt 160 km unna.", "Byens historie leses fra vest til øst: romersk, renessanse, barokk, 1800-tall, moderne."],
+    lookFor: "Finn de tre tårnene: Tour Part-Dieu («blyanten»), Tour Incity og Tour Oxygène, Lyons skyline mot øst."
+  },
+  {
+    id: "tour-metallique",
+    name: "Tour métallique de Fourvière",
+    sub: "Lyons lille Eiffeltårn",
+    cat: "bygning", arr: 5,
+    lat: 45.76391, lng: 4.82235, radius: 60,
+    short: "Tour métallique fra 1894 er en kopi av Eiffeltårnets tredje etasje, bygget som republikansk svar på basilikaen, og i dag en TV-sender.",
+    text: "Tårnet i stål ble reist 1892 til 1894, bare noen år etter Eiffeltårnet, og er i praksis en kopi av dets tredje etasje. Det var den republikanske og antiklerikale delen av byen som sto bak: et verdslig monument side om side med den nye basilikaen, rett ved siden av og nesten like høyt.\n\nTårnet hadde restaurant og heis og tok imot besøkende til 1953. Siden har det vært TV- og radiosender, stengt for publikum. Med sine 86 meter på toppen av høyden er spissen Lyons høyeste punkt.",
+    facts: ["Bygget 1892 til 1894, 86 meter høyt.", "Stengt for publikum siden 1953, i dag TV-sender.", "Toppen er byens høyeste punkt, rundt 372 meter over havet."]
+  },
+  {
+    id: "theatres-romains",
+    name: "Théâtre antique de Fourvière",
+    sub: "Frankrikes eldste romerske teater",
+    cat: "romersk", arr: 5,
+    lat: 45.75972, lng: 4.81969, radius: 90,
+    short: "Det store teateret ble bygget rundt år 15 f.Kr. under keiser Augustus og er det eldste romerske teateret i Frankrike, med plass til rundt 10 000.",
+    text: "Teateret ble anlagt rundt år 15 f.Kr., da Lugdunum var ung og Augustus var keiser, og utvidet under Hadrian på 100-tallet til en kapasitet på rundt 10 000 tilskuere. Det er det eldste romerske teateret i Frankrike og et av de største. Scenen var dekorert med marmor, og deler av gulvet i farget stein er fortsatt på plass.\n\nRuinene lå gjemt under jord og hager i over tusen år, og ble gravd ut fra 1933. Siden 1946 har teateret vært scene for Nuits de Fourvière, en sommerfestival med konserter og teater der tilskuerne sitter på de samme steinbenkene som romerne.",
+    facts: ["Bygget ca. 15 f.Kr., utvidet under Hadrian til ca. 10 000 plasser.", "Gravd ut fra 1933.", "Nuits de Fourvière har holdt konserter her siden 1946."],
+    lookFor: "Gå ned på scenen og se opp mot tilskuerradene. Legg merke til fargesteinen i scenegulvet."
+  },
+  {
+    id: "odeon",
+    name: "Odéon antique",
+    sub: "Det lille teateret for musikk",
+    cat: "romersk", arr: 5,
+    lat: 45.75872, lng: 4.81967, radius: 60,
+    short: "Odéon er det lille teateret ved siden av, fra 100-tallet, med plass til rundt 3 000 og et bevart gulv i farget marmor fra hele riket.",
+    text: "Odeonet var den intime scenen, for musikk, poesi og taler, med rundt 3 000 plasser mot det store teaterets 10 000. Det ble bygget på 100-tallet, trolig under Hadrian, og hadde tak over hele salen for akustikkens skyld.\n\nDet mest bemerkelsesverdige er gulvet på orkesterplassen, lagt i geometriske mønstre av marmor og granitt hentet fra hele Romerriket: grønt fra Hellas, rødt fra Egypt, gult fra Nord-Afrika. Det var en demonstrasjon av Lugdunums rekkevidde. Lyon er en av bare to byer i Gallia som hadde både teater og odeon, den andre er Vienne lenger sør.",
+    facts: ["Rundt 3 000 plasser, bygget på 100-tallet.", "Gulvet er lagt i marmor fra hele Romerriket.", "Bare Lyon og Vienne i Gallia hadde både teater og odeon."],
+    lookFor: "Marmorgulvet i orkesterplassen med fargede steiner i geometriske mønstre."
+  },
+  {
+    id: "lugdunum-musee",
+    name: "Lugdunum, Musée et Théâtres romains",
+    sub: "Det romerske museet i bakken",
+    cat: "museum", arr: 5,
+    lat: 45.76029, lng: 4.82048, radius: 50,
+    short: "Lugdunum-museet fra 1975 er bygget inn i åssiden så det ikke skal konkurrere med teatrene, og rommer blant annet Claudius-tavlen fra år 48.",
+    text: "Arkitekten Bernard Zehrfuss gravde museet inn i skråningen ved siden av teatrene i 1975, slik at bare to vinduer stikker ut mot ruinene. Innvendig går en spiralrampe nedover i betong, og samlingen er blant de viktigste for romersk Gallia.\n\nHøydepunktet er Table claudienne, en bronsetavle med talen keiser Claudius holdt i senatet i år 48, der han argumenterte for at gallerne skulle få sitte i det romerske senatet. Claudius var selv født i Lyon. I tillegg finnes Coligny-kalenderen, en gallisk kalender i bronse, og store mosaikker, blant annet en som viser et kappløp i sirkus.",
+    facts: ["Arkitekt Bernard Zehrfuss, åpnet 1975, bygget inn i bakken.", "Table claudienne gjengir keiser Claudius' tale fra år 48.", "Coligny-kalenderen er den best bevarte galliske kalenderen."],
+    lookFor: "Finn de to store vinduene som ser ut over teatrene. Inne: bronsetavlen i det første store rommet."
+  },
+  {
+    id: "funiculaire",
+    name: "Funiculaires de Fourvière et Saint-Just",
+    sub: "«Les ficelles», byens skråbaner",
+    cat: "annet", arr: 5,
+    lat: 45.76017, lng: 4.82596, radius: 50,
+    short: "Fra stasjonen Vieux Lyon går to funikulærer, F2 opp til Fourvière og F1 til Saint-Just via teatrene. Lyonerne kaller dem «les ficelles», hyssingene.",
+    text: "Lyon er en by med to høyder, og lyonerne har aldri likt å gå opp dem. Verdens første bybane av denne typen åpnet her i 1862, opp til Croix-Rousse fra Rue Terme. Saint-Just-linjen kom i 1878 og Fourvière-linjen i 1900. Lyonerne kaller dem kjærlig «les ficelles», hyssingene, etter kabelen som drar vognene.\n\nFra denne stasjonen går to linjer: F2 rett opp til basilikaen på to minutter, og F1 til Saint-Just med stopp ved Minimes for de romerske teatrene. Vanlig metrobillett gjelder. Et godt opplegg er å ta F2 opp, se basilikaen og utsikten, gå ned gjennom teatrene og Jardin du Rosaire.",
+    facts: ["Verdens første bybane med kabel åpnet i Lyon i 1862, opp til Croix-Rousse.", "F2 til Fourvière tar to minutter, F1 stopper ved de romerske teatrene.", "«Ficelle» betyr hyssing."],
+    lookFor: "Inne i stasjonen: to perronger, en for hver linje. F2 til venstre går til Fourvière."
+  },
+  {
+    id: "jardin-du-rosaire",
+    name: "Jardin du Rosaire",
+    sub: "Hagene under basilikaen",
+    cat: "annet", arr: 5,
+    lat: 45.76170, lng: 4.82380, radius: 100,
+    short: "Jardin du Rosaire er hagene som klatrer fra Vieux Lyon opp til basilikaen, en rolig vei ned fra Fourvière med roser, utsikt og stasjoner for rosenkransen.",
+    text: "Hagene ligger i skråningen mellom gamlebyen og basilikaen og ble anlagt på 1800-tallet som en pilegrimsvei, med stasjoner for rosenkransens bønner langs stien. I dag er det en av byens roligste grønne lunger, med roser, gamle trær og stadig nye utsikter over Saône og Presqu'île.\n\nDet er den beste veien ned fra Fourvière til fots: fra esplanaden går Chemin du Rosaire i slake svinger ned til Montée des Chazeaux og videre til Rue du Bœuf. Rundt femten minutter i rolig tempo.",
+    facts: ["Anlagt som pilegrimsvei på 1800-tallet med rosenkransstasjoner.", "Rolig nedvei fra basilikaen til Vieux Lyon på rundt 15 minutter."]
+  },
+  {
+    id: "montee-des-chazeaux",
+    name: "Montée des Chazeaux",
+    sub: "Trappen som kalles «Tire-Cul»",
+    cat: "gate", arr: 5,
+    lat: 45.76241, lng: 4.82578, radius: 50,
+    short: "Montée des Chazeaux er trappegaten med 228 trinn mellom Rue du Bœuf og Fourvière, kjent som «Tire-Cul», omtrent «drar-deg-i-baken».",
+    text: "Lyon har hundrevis av «montées», bratte gater og trapper opp høydene, og denne er en av de mest kjente. 228 trinn fører fra toppen av Rue du Bœuf opp til Jardin du Rosaire og videre mot basilikaen. Lyonerne kaller den «Tire-Cul», et navn som forklarer seg selv for den som går opp.\n\nNedover er den en fin og rask vei fra Fourvière til gamlebyen. Oppover er den mosjon.",
+    facts: ["228 trinn.", "Folkelig navn: «Tire-Cul»."]
+  },
+  {
+    id: "musee-cinema-miniature",
+    name: "Musée Cinéma et Miniature",
+    sub: "I Maison des Avocats",
+    cat: "museum", arr: 5,
+    lat: 45.76188, lng: 4.82730, radius: 40,
+    short: "Museet for film og miniatyrer ligger i Maison des Avocats fra 1500-tallet, et av gamlebyens vakreste hus med rosa gallerier i gårdsrommet.",
+    text: "Maison des Avocats i 60 rue Saint-Jean er et renessansehus med et gårdsrom omgitt av rosa pussede gallerier på toskanske søyler, blant de mest fotograferte i Vieux Lyon. Huset fikk navnet fordi advokatene ved domstolen holdt til her på 1800-tallet.\n\nSiden 2005 rommer det Musée Cinéma et Miniature, grunnlagt av miniaturisten Dan Ohlmann. Her er hyperrealistiske miniatyrscener i målestokk 1:12 og en stor samling originale filmrekvisitter, kostymer og spesialeffekter fra kjente filmer. Et uventet og godt museum for en regnværsdag.",
+    facts: ["Huset er fra 1500-tallet, museet fra 2005.", "Grunnlagt av miniaturisten Dan Ohlmann."],
+    lookFor: "Gårdsrommet med de rosa galleriene kan ses fra inngangen."
+  },
+  {
+    id: "place-de-la-trinite",
+    name: "Place de la Trinité",
+    sub: "Guignols plass",
+    cat: "plass", arr: 5,
+    lat: 45.75939, lng: 4.82553, radius: 50,
+    short: "Place de la Trinité er plassen der Guignol, Lyons berømte hånddukke, hører hjemme. Figuren ble skapt av silkeveveren Laurent Mourguet rundt 1808.",
+    text: "Guignol er Lyons bidrag til verdens teaterhistorie: en hånddukke med rund nese og flettet hår, skapt av Laurent Mourguet rundt 1808. Mourguet var silkevever som mistet jobben, ble tanntrekker og brukte dukker for å trekke publikum. Guignol snakker lyonsk dialekt, er fattig, frekk og alltid på de smås side mot politiet og de rike.\n\nDen tradisjonelle kulissen i Guignol-teatret er nettopp denne plassen, med Maison du Soleil, huset med en gyllen sol på fasaden, i bakgrunnen. Et lite Guignol-teater holder til her.",
+    facts: ["Guignol ble skapt av Laurent Mourguet rundt 1808.", "Maison du Soleil på plassen er den klassiske Guignol-kulissen.", "Mourguet var opprinnelig silkevever og tanntrekker."],
+    lookFor: "Finn den gylne solen på fasaden til Maison du Soleil."
+  },
+  {
+    id: "montee-du-gourguillon",
+    name: "Montée du Gourguillon",
+    sub: "Middelalderveien opp til Saint-Just",
+    cat: "gate", arr: 5,
+    lat: 45.75858, lng: 4.82376, radius: 60,
+    short: "Montée du Gourguillon er den gamle veien fra Saint-Georges opp til Saint-Just og Fourvière, brukt siden romertiden og i middelalderen av paver og konger.",
+    text: "Dette var hovedveien opp fra elven til platået i romertiden og middelalderen, lenge før funikulærene. Her gikk paver og konger som skulle til klostrene på Saint-Just, og her bar bøndene varer ned til byen. Gaten er bratt, brosteinslagt og nesten uten biler, med små hus fra 1600- og 1700-tallet.\n\nDet er en fin, rolig vei opp til teatrene hvis dere vil unngå funikulæren. Regn med et kvarter og litt pust.",
+    facts: ["Romersk og middelaldersk vei opp til platået.", "Nesten bilfri, brosteinslagt."]
+  }
+]);
