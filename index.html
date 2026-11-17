@@ -156,6 +156,7 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
 #banner[hidden] { display: none; }
 #toast { position: absolute; z-index: 8; left: 50%; transform: translateX(-50%); top: calc(env(safe-area-inset-top, 0px) + 84px); background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
 #toast.show { opacity: 1; }
+.stop .dir { display:inline-block; margin-top:6px; font-size:13px; color: var(--rhone); text-decoration:none; font-weight:600; }
 </style>
 </head>
 <body>
@@ -189,13 +190,13 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="data/arrondissements.js?v=20261117b"></script>
-<script src="data/routes.js?v=20261117b"></script>
-<script src="data/streets.js?v=20261117b"></script>
-<script src="data/plan.js?v=20261117b"></script>
-<script src="data/pois-a.js?v=20261117b"></script>
-<script src="data/pois-b.js?v=20261117b"></script>
-<script src="data/pois-c.js?v=20261117b"></script>
+<script src="data/arrondissements.js?v=20261117c"></script>
+<script src="data/routes.js?v=20261117c"></script>
+<script src="data/streets.js?v=20261117c"></script>
+<script src="data/plan.js?v=20261117c"></script>
+<script src="data/pois-a.js?v=20261117c"></script>
+<script src="data/pois-b.js?v=20261117c"></script>
+<script src="data/pois-c.js?v=20261117c"></script>
 <script>
 (function () {
   'use strict';
@@ -250,6 +251,12 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
   // ---------- Tilstand ----------
   const state = { pos: null, source: 'none', watchId: null, follow: false, view: 'here', day: 0, detail: null, street: '', streetAt: null, wiki: null };
   try { const d = localStorage.getItem('lyon.day'); if (d) state.day = Math.min(PLAN.length - 1, +d || 0); } catch (e) {}
+  // På selve reisedagene vises dagens program automatisk.
+  const TRIP_DAYS = ['2026-11-20', '2026-11-21', '2026-11-22'];
+  const todayIdx = (() => { const n = new Date(); const k = n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0'); return TRIP_DAYS.indexOf(k); })();
+  if (todayIdx >= 0) state.day = todayIdx;
+  state.allDays = todayIdx < 0;
+  function gmaps(lat, lng, mode) { return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=${mode || 'walking'}`; }
 
   // ---------- Kart ----------
   const map = L.map('map', { zoomControl: false, attributionControl: true }).setView([45.7625, 4.8335], 14);
@@ -521,7 +528,7 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
       ${paras}
       ${p.lookFor ? `<div class="lookfor"><b>Se etter:</b> ${esc(p.lookFor)}</div>` : ''}
       ${p.facts && p.facts.length ? `<div class="eyebrow">Visste du at</div><ul class="facts">${p.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
-      <div class="actions"><button class="act primary" id="showOnMap">Vis på kartet</button><a class="act" style="text-decoration:none" href="https://fr.wikipedia.org/w/index.php?search=${encodeURIComponent(p.name + ' Lyon')}" target="_blank" rel="noopener">Wikipedia</a><a class="act" style="text-decoration:none" href="https://maps.apple.com/?daddr=${p.lat},${p.lng}&dirflg=w" target="_blank" rel="noopener">Veibeskrivelse</a></div>
+      <div class="actions"><button class="act primary" id="showOnMap">Vis på kartet</button><a class="act" style="text-decoration:none" href="https://fr.wikipedia.org/w/index.php?search=${encodeURIComponent(p.name + ' Lyon')}" target="_blank" rel="noopener">Wikipedia</a><a class="act" style="text-decoration:none" href="${gmaps(p.lat, p.lng, 'walking')}" target="_blank" rel="noopener">Google Maps</a><a class="act" style="text-decoration:none" href="https://maps.apple.com/?daddr=${p.lat},${p.lng}&dirflg=w" target="_blank" rel="noopener">Apple Kart</a></div>
     </div>`;
     $('#backBtn').addEventListener('click', () => { state.detail = null; render(); });
     $('#showOnMap').addEventListener('click', () => { map.setView([p.lat, p.lng], 17); sheet.classList.add('peek'); });
@@ -535,7 +542,9 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
   }
   function renderProgram() {
     const day = PLAN[state.day];
-    let h = `<div class="days">` + PLAN.map((d, i) => `<button class="day" data-day="${i}" aria-selected="${i === state.day}"><b>${esc(d.day)}</b><small>${esc(d.date)}</small></button>`).join('') + `</div>`;
+    let h = state.allDays
+      ? `<div class="days">` + PLAN.map((d, i) => `<button class="day" data-day="${i}" aria-selected="${i === state.day}"><b>${esc(d.day)}</b><small>${esc(d.date)}</small></button>`).join('') + `</div>`
+      : `<div class="row" style="align-items:baseline;margin-bottom:8px"><h2 style="margin:0">${esc(day.day)} ${esc(day.date)}</h2><button class="act" id="otherDays" style="font-size:13px">Andre dager</button></div>`;
     h += `<div class="tl">`;
     const nowStop = (() => { if (!state.pos) return -1; let best = -1, bd = 150; day.items.forEach((it, i) => { if (it.place && PLACES[it.place]) { const [lat, lng] = PLACES[it.place]; const d = haversine(state.pos, { lat, lng }); if (d < bd) { bd = d; best = i; } } }); return best; })();
     day.items.forEach((it, i) => {
@@ -543,7 +552,9 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
         const r = ROUTES[it.leg];
         h += `<div></div><div class="leg" data-leg="${it.leg}">${legIcon(r ? r.mode : 'foot')}${r ? `<b>${r.min} min · ${fmtDist(r.dist)}</b>` : ''}<span class="lbl">${esc(it.label || '')}</span></div>`;
       } else {
-        h += `<div class="t">${esc(it.time || '')}</div><div class="stop ${i === nowStop ? 'now' : ''}" data-place="${it.place || ''}" data-idx="${i}"><div class="n">${esc(it.title)}</div>${it.note ? `<div class="note">${esc(it.note)}</div>` : ''}</div>`;
+        const prev = day.items[i - 1]; const mode = prev && prev.leg && ROUTES[prev.leg] && ROUTES[prev.leg].mode === 'car' ? 'driving' : 'walking';
+        const pl = it.place && PLACES[it.place];
+        h += `<div class="t">${esc(it.time || '')}</div><div class="stop ${i === nowStop ? 'now' : ''}" data-place="${it.place || ''}" data-idx="${i}"><div class="n">${esc(it.title)}</div>${it.note ? `<div class="note">${esc(it.note)}</div>` : ''}${pl ? `<a class="dir" href="${gmaps(pl[0], pl[1], mode)}" target="_blank" rel="noopener">Veibeskrivelse ${mode === 'driving' ? 'med bil' : 'til fots'} ›</a>` : ''}</div>`;
       }
     });
     h += `</div>`;
@@ -554,6 +565,8 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
     h += `<div class="note" style="margin-top:12px">${foot.length ? `Til fots i dag: ca. ${fmtDist(sum(foot))}, ${mins(foot)} min i rolig tempo.` : ''} ${car.length ? `Bil: ${fmtDist(sum(car))}, ${mins(car)} min uten kø.` : ''}</div>`;
     content.innerHTML = h;
     content.querySelectorAll('.day').forEach(b => b.addEventListener('click', () => { state.day = +b.dataset.day; try { localStorage.setItem('lyon.day', state.day); } catch (e) {} drawDay(state.day); render(); }));
+    const od = $('#otherDays'); if (od) od.addEventListener('click', () => { state.allDays = true; render(); });
+    content.querySelectorAll('.dir').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
     content.querySelectorAll('.stop').forEach(s => s.addEventListener('click', () => {
       const pl = PLACES[s.dataset.place]; if (!pl) return;
       map.setView(pl, 16); sheet.classList.add('peek');
