@@ -567,5 +567,56 @@ window.LYON_POIS = (window.LYON_POIS || []).concat([
       "Rhônexpress til Part-Dieu tar rundt tretti minutter."
     ],
     lookFor: "Calatravas stasjonshall mellom terminalene, best sett utenfra med fuglevingene mot himmelen."
+  },
+  {
+    id: "chateau-de-la-chaize",
+    name: "Château de La Chaize",
+    sub: "Slottet i Brouilly, bygget 1676",
+    cat: "bygning",
+    arr: 0,
+    lat: 46.08906, lng: 4.63371,
+    radius: 400,
+    short: "Beaujolais' store slott, tegnet av Louis XIVs arkitekt Mansart med hage i Le Nôtres stil, og en av regionens største vinprodusenter.",
+    text: "Château de La Chaize ble bygget i 1676 for Jean-François de La Chaize d'Aix, bror av pater François de La Chaise, Ludvig XIVs skriftefar, mannen kirkegården Père-Lachaise i Paris er oppkalt etter. Slottet ble reist i stilen fra Versailles, med Jules Hardouin-Mansart som arkitekt og en fransk parkhage i André Le Nôtres ånd, og det ble i 1972 fredet som Monument Historique sammen med hagen og vinkjelleren.\n\nVinkjelleren fra 1771 er et av de lengste i Beaujolais og ligger i forlengelsen av slottets akse. Eiendommen er på rundt 450 hektar, hvorav 110 hektar vinmark, og produserer i fire cru-appellasjoner, først og fremst Brouilly og Côte de Brouilly. Lieu-dit «La Chaize» er et monopol som bare dette huset eier.\n\nI 2017 kjøpte familien Gruy slottet og satte i gang et omfattende restaureringsarbeid, med en ny underjordisk vinkjeller og økologisk drift. Det er også derfor omvisningen tar dere både gjennom den historiske kjelleren og den moderne.",
+    facts: [
+      "Byggherrens bror var Ludvig XIVs skriftefar, og Père-Lachaise-kirkegården i Paris bærer hans navn.",
+      "Fredet som Monument Historique i 1972: slott, hage og vinkjeller.",
+      "110 hektar vinmark gjør det til en av de største eiendommene i Beaujolais."
+    ],
+    lookFor: "Aksen fra slottet gjennom hagen og rett inn i den lange vinkjelleren. Og de klippede buksbomene i parterret foran fasaden."
+  },
+  {
+    id: "chateau-thivin",
+    name: "Château Thivin",
+    sub: "Familien Geoffray på Mont Brouilly",
+    cat: "mat",
+    arr: 0,
+    lat: 46.10222, lng: 4.64885,
+    radius: 300,
+    short: "Côte de Brouillys mest kjente hus, drevet av familien Geoffray siden 1877, på skråningen av det vulkanske Mont Brouilly.",
+    text: "Château Thivin ligger på sørsiden av Mont Brouilly, en isolert høyde midt i Beaujolais som skiller seg fra granittåsene rundt. Fjellet består av blå vulkansk stein, lokalt kalt pierre bleue, og det er den som gir Côte de Brouilly sin mer strukturerte stil sammenlignet med Brouilly fra slettene rundt foten.\n\nFamilien Geoffray kjøpte eiendommen i 1877, og det var Claude Geoffray som på 1930-tallet var med på å få Côte de Brouilly anerkjent som egen appellasjon, i 1938. Huset regnes fortsatt som referansen for appellasjonen og er drevet av samme familie i femte og sjette generasjon.\n\nPå toppen av Mont Brouilly står kapellet Notre-Dame-aux-Raisins fra 1857, reist av vinbøndene etter år med meldugg og uvær, og hvert år i september går det en pilegrimsferd dit for å be om en god innhøsting. Fra toppen ser man over hele Beaujolais, og i klart vær til Mont Blanc.",
+    facts: [
+      "Mont Brouilly er vulkansk, og den blå steinen skiller Côte de Brouilly fra Brouilly.",
+      "Côte de Brouilly ble egen appellasjon i 1938, med Claude Geoffray som en av pådriverne.",
+      "Kapellet på toppen, Notre-Dame-aux-Raisins, ble bygget av vinbøndene i 1857."
+    ],
+    lookFor: "De bratte, terrasserte vinmarkene rett bak huset, og den blåsvarte steinen i murene."
+  },
+  {
+    id: "domaine-frederic-berne",
+    name: "Domaine Frédéric Berne",
+    sub: "Ung, økologisk produsent i Lantignié",
+    cat: "mat",
+    arr: 0,
+    lat: 46.15245, lng: 4.61383,
+    radius: 300,
+    short: "Liten biodynamisk gård på Château des Vergers i Lantignié, startet 2014, der vinbonden selv tar imot og forklarer jordsmonnet.",
+    text: "Frédéric Berne startet for seg selv i 2014 og driver rundt tretten hektar på og rundt Château des Vergers i Lantignié, en landsby mellom Beaujeu og Régnié. Gården er økologisk sertifisert og drives biodynamisk, og den er blitt et av de mest omtalte unge husene i Beaujolais.\n\nDet spesielle her er at han lager separate viner etter bergarten under vinmarken: rosa granitt, blå stein og de dypere jordene nede ved gården. Det gjør smakingen til en liten geologitime om hva som egentlig skiller crùene i Beaujolais fra hverandre.\n\nLantignié er ikke egen cru ennå, men produsentene her arbeider for å få en egen appellasjon, og Berne er en av frontfigurene for det.",
+    facts: [
+      "Økologisk og biodynamisk, rundt 13 hektar.",
+      "Vinene er delt etter bergart: rosa granitt, blå stein og dypere jord.",
+      "Lantignié-produsentene arbeider for å bli Beaujolais' ellevte cru."
+    ],
+    lookFor: "Steinprøvene i smakerommet, som viser forskjellen på rosa granitt og blå diorit."
   }
 ]);

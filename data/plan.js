@@ -33,18 +33,19 @@ window.LYON_PLAN = [
     items: [
       { leg: "sat1", label: "Gå til frokost" },
       { time: "09:00", title: "La Meunière", place: "meuniere",
-        note: "11 rue Neuve, 1er. Frem til ca. 10:15." },
-      { leg: "sat2", label: "Gå opp til Pentes" },
-      { time: "ca. 10:15", title: "Rue Sainte-Catherine", place: "stecatherine",
-        note: "Kort stopp ved den gamle leiligheten." },
-      { leg: "sat3", label: "Tilbake til hotellet" },
-      { time: "ca. 10:45", title: "Hotel Boscolo", place: "boscolo",
-        note: "Ta med bagasje for dagen og hent bilen." },
-      { leg: "sat4", label: "Kjør mot Beaujolais" },
-      { time: "ca. 12:00", title: "Vingårdsbesøk", place: "oingt",
-        note: "Forhåndsavtalt. Plassering oppdateres når vingården er bestemt. Deretter Oingt, en rusletur og noe lett å spise frem til ca. 14:15." },
+        note: "Mâchon i 11 rue Neuve, 1er. Frem til ca. 10:00." },
+      { leg: "sat2", label: "Tilbake til hotellet og bilen" },
+      { time: "ca. 10:15", title: "Avreise fra Boscolo", place: "boscolo",
+        note: "Bilen bør stå lett tilgjengelig. A6 nordover mot Villefranche, avkjøring Belleville, så mot Mont Brouilly." },
+      { leg: "sat4", label: "Kjør til Côte de Brouilly" },
+      { time: "ca. 11:30", title: "Château Thivin", place: "thivin",
+        note: "Forespurt for smaking 11:30–12:15, ikke bekreftet ennå. 630 route du Mont Brouilly, Odenas. Hvis de ikke kan: Domaine Frédéric Berne i Lantignié er plan B, 20 minutter unna La Chaize." },
+      { leg: "sat4b", label: "Kort kjøretur rundt Mont Brouilly" },
+      { time: "13:00", title: "Château de La Chaize", place: "chaize",
+        note: "BESTILT: omvisning og smaking, 1,5 time, 4 personer, 30 € hver. Ring på porten merket «visiteurs». Møt opp 12:45. Slutt ca. 14:30." },
       { leg: "sat5", label: "Kjør tilbake til Lyon" },
-      { time: "ca. 15:30", title: "Lever leiebilen på Part-Dieu", place: "partdieu" },
+      { time: "ca. 15:30", title: "Lever leiebilen på Part-Dieu", place: "partdieu",
+        note: "Ikke spikret. Alternativet er å beholde bilen til søndag og kjøre selv til flyplassen." },
       { leg: "sat6", label: "Tilbake til Boscolo (taxi, metro eller til fots 25 min)" },
       { time: "ca. 16:00", title: "Fri ettermiddag", place: "boscolo",
         note: "Tid til å skifte frem til ca. 19:15." },
@@ -67,7 +68,7 @@ window.LYON_PLACE_NAMES = {
   partdieu: "Gare de Lyon Part-Dieu", boscolo: "Hotel Boscolo Lyon", musee: "Le Musée",
   saintjean: "Cathédrale Saint-Jean", fourviere: "Basilique de Fourvière", cochon: "Le Cochon qui Boit",
   meuniere: "La Meunière", stecatherine: "Rue Sainte-Catherine", bocuse: "Paul Bocuse, Collonges",
-  oingt: "Oingt", airport: "Aéroport Lyon-Saint-Exupéry", funi_vl: "Funiculaire Vieux Lyon", funi_fv: "Funiculaire Fourvière"
+  oingt: "Oingt", thivin: "Château Thivin", chaize: "Château de La Chaize", berne: "Domaine Frédéric Berne", airport: "Aéroport Lyon-Saint-Exupéry", funi_vl: "Funiculaire Vieux Lyon", funi_fv: "Funiculaire Fourvière"
 };
 
 // Kort tekst per arrondissement til toppfeltet.

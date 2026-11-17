@@ -189,13 +189,13 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="data/arrondissements.js?v=20261116b"></script>
-<script src="data/routes.js?v=20261116b"></script>
-<script src="data/streets.js?v=20261116b"></script>
-<script src="data/plan.js?v=20261116b"></script>
-<script src="data/pois-a.js?v=20261116b"></script>
-<script src="data/pois-b.js?v=20261116b"></script>
-<script src="data/pois-c.js?v=20261116b"></script>
+<script src="data/arrondissements.js?v=20261117a"></script>
+<script src="data/routes.js?v=20261117a"></script>
+<script src="data/streets.js?v=20261117a"></script>
+<script src="data/plan.js?v=20261117a"></script>
+<script src="data/pois-a.js?v=20261117a"></script>
+<script src="data/pois-b.js?v=20261117a"></script>
+<script src="data/pois-c.js?v=20261117a"></script>
 <script>
 (function () {
   'use strict';
@@ -209,6 +209,12 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
   const $ = s => document.querySelector(s);
 
   // ---------- Geometri ----------
+  function compass(a, b) {
+    const toR = Math.PI / 180, dLng = (b.lng - a.lng) * toR;
+    const y = Math.sin(dLng) * Math.cos(b.lat * toR), x = Math.cos(a.lat * toR) * Math.sin(b.lat * toR) - Math.sin(a.lat * toR) * Math.cos(b.lat * toR) * Math.cos(dLng);
+    const deg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+    return ['N', 'NØ', 'Ø', 'SØ', 'S', 'SV', 'V', 'NV'][Math.round(deg / 45) % 8];
+  }
   function haversine(a, b) {
     const R = 6371000, toR = Math.PI / 180;
     const dLat = (b.lat - a.lat) * toR, dLng = (b.lng - a.lng) * toR;
@@ -469,6 +475,8 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
     let h = '';
     if (hits.length) { h += `<div class="eyebrow">Dere står ved</div>` + hits.map(x => poiCard(x.p, x.d, true)).join(''); }
     h += `<div class="eyebrow">I nærheten</div><div class="list">` + near.map(x => `<div class="item" data-poi="${x.p.id}"><div><div class="n">${esc(x.p.name)}</div><div class="s">${esc(x.p.sub || '')}</div></div><div class="d">${fmtDist(x.d)}</div></div>`).join('') + `</div>`;
+    const mine = all.filter(x => x.p.cat === 'personlig');
+    if (mine.length) h += `<div class="eyebrow">Dine adresser, sett herfra</div><div class="list">` + mine.map(x => `<div class="item" data-poi="${x.p.id}"><div><div class="n">${esc(x.p.name)}</div><div class="s">${esc(x.p.sub || '')}</div></div><div class="d">${fmtDist(x.d)} ${compass(state.pos, x.p)}</div></div>`).join('') + `</div>`;
     h += `<div class="actions"><button class="act" id="streetBtn">Hvilken gate?</button><button class="act" id="wikiBtn">Wikipedia i nærheten</button></div>`;
     if (state.wiki && state.wiki.at && haversine(state.wiki.at, state.pos) < 120) h += renderWiki(state.wiki.items);
     if (districts.length) { h += `<div class="eyebrow">Området</div>` + districts.map(x => `<div class="card btn" data-poi="${x.p.id}"><h3>${esc(x.p.name)}</h3><div class="sub">${esc(x.p.sub || '')}</div><div>${esc(x.p.short || '')}</div></div>`).join(''); }

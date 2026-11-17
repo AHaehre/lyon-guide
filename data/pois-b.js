@@ -312,7 +312,7 @@ window.LYON_POIS = (window.LYON_POIS || []).concat([
   {
     id: "rue-emile-zola",
     name: "Rue Émile Zola",
-    sub: "Gaten der jeg bodde",
+    sub: "Gaten der Andreas bodde",
     cat: "personlig",
     arr: 2,
     lat: 45.75992, lng: 4.83294,
