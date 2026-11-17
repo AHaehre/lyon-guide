@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22385e"/><stop offset="1" stop-color="#0f1b30"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- Presqu'île -->
+  <path d="M150 -20 C 165 150, 200 290, 236 400 C 246 430, 252 455, 256 480 C 260 455, 266 430, 276 400 C 312 290, 350 150, 365 -20 Z" fill="#e9dcc3" opacity="0.13"/>
+  <!-- Saône (west) -->
+  <path d="M80 -20 C 70 140, 130 280, 190 390 C 215 435, 240 470, 256 540" fill="none" stroke="#7fb3d9" stroke-width="34" stroke-linecap="round"/>
+  <!-- Rhône (east) -->
+  <path d="M445 -20 C 450 140, 380 280, 320 390 C 296 435, 272 470, 256 540" fill="none" stroke="#a6d1ec" stroke-width="46" stroke-linecap="round"/>
+  <!-- Fourvière -->
+  <circle cx="48" cy="300" r="9" fill="#d4a94c"/>
+  <!-- Bellecour -->
+  <rect x="245" y="286" width="22" height="16" rx="2" fill="#c8413a"/>
+  <text x="256" y="150" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="bold" letter-spacing="5" fill="#d4a94c">LYON</text>
+</svg>
