@@ -1,6 +1,6 @@
 // Service worker: app-skallet og data lagres ved installasjon, kartfliser lagres etter hvert som de brukes.
-const VERSION = 'lyon-v6';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-180.png',
+const VERSION = 'lyon-v7';
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './splash.mp4',
   './data/arrondissements.js', './data/routes.js', './data/plan.js',
   './data/pois-a.js', './data/pois-b.js', './data/pois-c.js', './data/streets.js',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
