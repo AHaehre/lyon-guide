@@ -162,6 +162,16 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
 #splash video { width: min(78vw, 60vh); height: min(78vw, 60vh); border-radius: 24px; box-shadow: 0 12px 40px rgba(0,0,0,.45); object-fit: cover; }
 #splash .skip { color: #d4a94c; font-family: var(--display); font-size: 22px; letter-spacing: 1px; }
 #splash small { color: #a6d1ec; font-family: var(--body); font-size: 13px; }
+.menu h4 { margin: 14px 0 6px; font-family: var(--display); font-weight: 400; font-size: 17px; }
+.menu .mi { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.menu .mi:last-child { border-bottom: 0; }
+.menu .mi b { font-weight: 600; }
+.menu .mi .no { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.menu .mi .pr { white-space: nowrap; color: var(--muted); font-size: 13px; }
+.menu .pick { padding: 8px 10px; margin: 6px 0; border-left: 3px solid var(--gold); background: var(--soft); border-radius: 0 8px 8px 0; font-size: 14px; }
+.menu .pick b { display: block; }
+.menu .pick.weak { border-left-color: var(--line); }
+.menu .src { font-size: 12px; color: var(--muted); margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -196,13 +206,14 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="data/arrondissements.js?v=20261117d"></script>
-<script src="data/routes.js?v=20261117d"></script>
-<script src="data/streets.js?v=20261117d"></script>
-<script src="data/plan.js?v=20261117d"></script>
-<script src="data/pois-a.js?v=20261117d"></script>
-<script src="data/pois-b.js?v=20261117d"></script>
-<script src="data/pois-c.js?v=20261117d"></script>
+<script src="data/arrondissements.js?v=20261119a"></script>
+<script src="data/routes.js?v=20261119a"></script>
+<script src="data/streets.js?v=20261119a"></script>
+<script src="data/plan.js?v=20261119a"></script>
+<script src="data/menus.js?v=20261119a"></script>
+<script src="data/pois-a.js?v=20261119a"></script>
+<script src="data/pois-b.js?v=20261119a"></script>
+<script src="data/pois-c.js?v=20261119a"></script>
 <script>
 (function () {
   'use strict';
@@ -212,6 +223,7 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
   const PLACES = window.LYON_PLACES || {};
   const PLAN = window.LYON_PLAN || [];
   const ARRINFO = window.LYON_ARR_INFO || {};
+  const MENUS = window.LYON_MENUS || {};
   const NAMES = window.LYON_PLACE_NAMES || {};
   const $ = s => document.querySelector(s);
 
@@ -531,6 +543,33 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
     return `<div class="eyebrow">Legg på hjemskjermen</div><div class="card"><div class="note">I Safari: trykk Del-knappen og velg «Legg til på Hjem-skjerm». Da åpner guiden som en egen app i fullskjerm og husker kart og innhold.</div></div>`;
   }
 
+  function renderMenu(m) {
+    if (!m) return '';
+    let h = `<div class="menu"><div class="eyebrow">Meny</div>`;
+    if (m.format) h += `<div class="note">${esc(m.format)}</div>`;
+    if (m.machon && m.machon.details) h += `<div class="pick"><b>Mâchon</b>${esc(m.machon.details)}</div>`;
+    (m.menus || []).forEach(mn => {
+      h += `<h4>${esc(mn.name)}${mn.price ? ` · ${esc(mn.price)}` : ''}</h4>`;
+      (mn.courses || []).forEach(c => { h += `<div class="mi"><div><b>${esc(c.fr)}</b><div class="no">${esc(c.no || '')}</div></div></div>`; });
+    });
+    (m.menu || m.carte || []).forEach(sec => {
+      h += `<h4>${esc(sec.section)}</h4>`;
+      (sec.items || []).forEach(it => { h += `<div class="mi"><div><b>${esc(it.fr)}</b><div class="no">${esc(it.no || '')}</div></div>${it.price ? `<div class="pr">${esc(it.price)}</div>` : ''}</div>`; });
+    });
+    if (m.menus && m.carte && m.carte.length) { /* both rendered above */ }
+    if (m.picks && m.picks.length) {
+      h += `<div class="eyebrow" style="margin-top:14px">Anbefalt</div>`;
+      m.picks.forEach(pk => { h += `<div class="pick ${pk.strength === 'weak' ? 'weak' : ''}"><b>${esc(pk.dish)}</b>${esc(pk.why || '')}</div>`; });
+    }
+    if (m.wine && (m.wine.notes || (m.wine.picks || []).length)) {
+      h += `<div class="eyebrow" style="margin-top:14px">Vin</div>`;
+      if (m.wine.notes) h += `<div class="note">${esc(m.wine.notes)}</div>`;
+      (m.wine.picks || []).forEach(w => { h += `<div class="pick"><b>${esc(w.name)}${w.price ? ` · ${esc(w.price)}` : ''}</b>${esc(w.why || '')}</div>`; });
+    }
+    if (m.practical) h += `<div class="eyebrow" style="margin-top:14px">Praktisk</div><div class="note">${esc(m.practical)}</div>`;
+    h += `<div class="src">${m.updated ? `Hentet ${esc(m.updated)}. ` : ''}${m.confidence ? esc(m.confidence) : ''} Menyer endres, sjekk tavlen på stedet.</div></div>`;
+    return h;
+  }
   function renderDetail(id) {
     const p = POIS.find(x => x.id === id); if (!p) { state.detail = null; return render(); }
     const d = state.pos ? haversine(state.pos, p) : null;
@@ -544,6 +583,7 @@ input[type="search"] { width: 100%; border: 1px solid var(--line); border-radius
       ${paras}
       ${p.lookFor ? `<div class="lookfor"><b>Se etter:</b> ${esc(p.lookFor)}</div>` : ''}
       ${p.facts && p.facts.length ? `<div class="eyebrow">Visste du at</div><ul class="facts">${p.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
+      ${renderMenu(MENUS[p.id])}
       <div class="actions"><button class="act primary" id="showOnMap">Vis på kartet</button><a class="act" style="text-decoration:none" href="https://fr.wikipedia.org/w/index.php?search=${encodeURIComponent(p.name + ' Lyon')}" target="_blank" rel="noopener">Wikipedia</a><a class="act" style="text-decoration:none" href="${gmaps(p.lat, p.lng, 'walking')}" target="_blank" rel="noopener">Google Maps</a><a class="act" style="text-decoration:none" href="https://maps.apple.com/?daddr=${p.lat},${p.lng}&dirflg=w" target="_blank" rel="noopener">Apple Kart</a></div>
     </div>`;
     $('#backBtn').addEventListener('click', () => { state.detail = null; render(); });

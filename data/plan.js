@@ -25,7 +25,7 @@ window.LYON_PLAN = [
         note: "Shopping i Rue de la République, kafé eller hotellpause. Ingen obligatoriske poster." },
       { leg: "fri5", label: "Gå til middag" },
       { time: "20:00", title: "Le Cochon qui Boit", place: "cochon",
-        note: "Rue Roger Violi, 1er. Øyvind har vært her før." }
+        note: "23 rue Royale, 1er, ved Croix-Paquet. Øyvind har vært her før. Meny og vintips ligger under stedet." }
     ]
   },
   {
@@ -33,13 +33,13 @@ window.LYON_PLAN = [
     items: [
       { leg: "sat1", label: "Gå til frokost" },
       { time: "09:00", title: "La Meunière", place: "meuniere",
-        note: "Mâchon i 11 rue Neuve, 1er. Frem til ca. 10:00." },
+        note: "Mâchon i 11 rue Neuve, 1er, 34 € pp med vin. Krever forhåndsbestilling og starter presis kl. 09:00. Varer normalt til 11, så si fra at dere må gå 10:15. Meny og vintips under stedet." },
       { leg: "sat2", label: "Tilbake til hotellet og bilen" },
       { time: "ca. 10:15", title: "Avreise fra Boscolo", place: "boscolo",
         note: "Bilen bør stå lett tilgjengelig. A6 nordover, avkjøring Villefranche, så vestover mot Oingt." },
       { leg: "sat4", label: "Kjør til Pierres Dorées" },
       { time: "ca. 11:00", title: "Oingt", place: "oingt",
-        note: "Rusletur i gullsteinslandsbyen, opp i donjonen for utsikten, en kaffe eller noe lett å spise. Avreise senest 12:05, det er 43 minutter videre til La Chaize." },
+        note: "Ingen vingårdsavtale før La Chaize: Thivin passet ikke, Berne svarte ikke. Rusletur i gullsteinslandsbyen, opp i donjonen for utsikten, en kaffe eller noe lett å spise. Avreise senest 12:05, det er 43 minutter videre til La Chaize." },
       { leg: "sat4b", label: "Kjør nordover gjennom Beaujolais" },
       { time: "13:00", title: "Château de La Chaize", place: "chaize",
         note: "BESTILT: omvisning og smaking, 1,5 time, 4 personer, 30 € hver. Ring på porten merket «visiteurs». Møt opp 12:45. Slutt ca. 14:30." },

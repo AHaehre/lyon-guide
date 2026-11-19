@@ -595,11 +595,11 @@ window.LYON_POIS = (window.LYON_POIS || []).concat([
     arr: 1,
     lat: 45.77065, lng: 4.83738,
     radius: 50,
-    short: "Le Cochon qui Boit ligger i Rue Roger Violi ved Rhône-kaien i 1er, en liten moderne bistro med lyonsk sjel.",
-    text: "Le Cochon qui Boit, grisen som drikker, ligger i Rue Roger Violi i 1er, en liten gate mellom Rue Royale og Quai Saint-Clair, like nord for operaen. Kvartalet er den rolige, elegante delen av 1er ved foten av Croix-Rousse-skråningen, med 1700-talls fasader og utsikt over Rhône fra kaien.\n\nRestauranten er en liten bistro med en kort meny som bygger på lyonske råvarer og mye gris, i en mer moderne stil enn de klassiske bouchonene. Øyvind har vært her før.\n\nFra hotellet går man nordover langs Rhône-kaien forbi Pont Lafayette og Pont Morand, rundt 12 minutter.",
+    short: "Le Cochon qui Boit ligger i 23 rue Royale ved Rhône-kaien i 1er, en liten moderne bistro med lyonsk sjel og Bib Gourmand.",
+    text: "Le Cochon qui Boit, grisen som drikker, ligger i 23 rue Royale i 1er, på hjørnet mot den lille Rue Roger Violi, like nord for operaen. Kvartalet er den rolige, elegante delen av 1er ved foten av Croix-Rousse-skråningen, med 1700-talls fasader og utsikt over Rhône fra kaien.\n\nRestauranten er en liten bistro med en kort meny som bygger på lyonske råvarer og mye gris, i en mer moderne stil enn de klassiske bouchonene. Øyvind har vært her før.\n\nFra hotellet går man nordover langs Rhône-kaien forbi Pont Lafayette og Pont Morand, rundt 12 minutter.",
     facts: [
       "Kvartalet rundt Rue Royale og Place Tolozan var 1700-tallets fineste adresser i Lyon.",
-      "Gaten heter etter Roger Violi, en motstandsmann henrettet i 1944."
+      "Sidegaten Rue Roger Violi heter etter en motstandsmann henrettet i 1944."
     ]
   },
   {
